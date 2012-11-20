@@ -6,42 +6,41 @@ AUTH = ENV['AUTH']  # 'auth+live+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 USER = ENV['USER']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
 ROOM = ENV['ROOM']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
 
-Turntabler.run do
-  client = Turntabler::Client.new(USER, AUTH, :room => ROOM)
+# Reset the users list
+last_activity = {}
 
-  # Reset the users list
-  last_activity = {}
-  client.room.listeners.each do |user|
+Turntabler.run(USER, AUTH, :room => ROOM) do
+  room.listeners.each do |user|
     last_activity[user.id] = Time.now
   end
 
-  client.on :user_entered do |user|
+  on :user_entered do |user|
     last_activity[user.id] = Time.now
   end
 
-  client.on :user_left do |user|
+  on :user_left do |user|
     last_activity.delete(user.id)
   end
 
-  client.on :user_spoke do |message|
+  on :user_spoke do |message|
     last_activity[message.sender.id] = Time.now
   end
 
-  client.on :dj_added do |user|
+  on :dj_added do |user|
     last_activity[user.id] = Time.now
   end
 
-  client.on :dj_removed do |user|
+  on :dj_removed do |user|
     last_activity[user.id] = Time.now
   end
 
-  client.on :song_voted do |song|
+  on :song_voted do |song|
     song.votes.each do |vote|
       last_activity[vote.user.id] = Time.now
     end
   end
 
-  client.on :song_snagged do |snag|
+  on :song_snagged do |snag|
     last_activity[snag.user.id] = Time.now
   end
 end

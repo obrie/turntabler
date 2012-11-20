@@ -6,9 +6,8 @@ AUTH = ENV['AUTH']  # 'auth+live+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 USER = ENV['USER']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
 ROOM = ENV['ROOM']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
 
-Turntabler.run do
-  client = Turntabler::Client.new(USER, AUTH, :room => ROOM)
-  client.on :user_entered do |user|
+TT.run(USER, AUTH, :room => ROOM) do
+  on :user_entered do |user|
     user.become_fan
   end
 end

@@ -6,9 +6,8 @@ AUTH = ENV['AUTH']  # 'auth+live+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 USER = ENV['USER']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
 ROOM = ENV['ROOM']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
 
-Turntabler.run do
-  client = Turntabler::Client.new(USER, AUTH, :room => ROOM)
-  client.on :user_spoke do |message|
+Turntabler.run(USER, AUTH, :room => ROOM) do
+  on :user_spoke do |message|
     if message.text =~ /bop/
       client.room.current_song.vote
     end

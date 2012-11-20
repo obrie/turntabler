@@ -45,30 +45,45 @@ module Turntabler
     #   # Non-interactive, not in reactor / fiber
     #   Turntabler.run do
     #     client = Turntabler::Client.new(...)
-    #     client.user.load
+    #     client.room.become_dj
     #     # ...
     #   end
     #   
     #   # Interactive, not in reactor / fiber
     #   Turntabler.run do
-    #     @client.user.load
+    #     client.room.become_dj
     #     # ...
     #   end
     #   
     #   # Non-interactive, already in reactor / fiber
     #   client = Turntabler::Client(...)
-    #   client.user.load
+    #   client.room.become_dj
+    # 
+    # @example DSL
+    #   # Takes the same arguments as Turntabler::Client
+    #   Turntabler.run(USER, AUTH, :room => ROOM) do
+    #     room.become_dj
+    #     on :user_enter do
+    #       # ...
+    #     end
+    #   end
     # 
     # == Exception handling
     # 
     # Any exceptions that occur within the block will be automatically caught
     # and logged.  This prevents the EventMachine reactor from dying.
-    def run(&block)
+    def run(*args, &block)
       if EM.reactor_running?
         EM.next_tick do
           EM.synchrony do
             begin
-              block.call
+              if args.any?
+                # Run the block within a client
+                Client.new(*args, &block)
+              else
+                # Just run the block within a fiber
+                block.call
+              end
             rescue Exception => ex
               logger.error(([ex.message] + ex.backtrace) * "\n")
             end
