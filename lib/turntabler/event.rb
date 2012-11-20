@@ -100,7 +100,7 @@ module Turntabler
     handle :user_updated, :update_user do
       fans_change = data.delete('fans')
       user = room.build_user(data)
-      user.attributes = {'fans' => user.fans_count + fans_change}
+      user.attributes = {'fans' => user.fans_count + fans_change} if fans_change
       user
     end
 
