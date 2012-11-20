@@ -90,7 +90,7 @@ module Turntabler
           end
         end
       else
-        EM.synchrony { run(&block) }
+        EM.synchrony { run(*args, &block) }
       end
     end
   end
