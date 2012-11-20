@@ -158,13 +158,13 @@ end
 The examples above is just a very, very small subset of the possible things you
 can do with turntabler.  For a *complete* list, see the API documentation, especially:
 
-* Turntabler::AuthorizedUser
-* Turntabler::Client
-* Turntabler::Playlist
-* Turntabler::Room
-* Turntabler::RoomDirectory
-* Turntabler::Song
-* Turntabler::User
+* [Turntabler::AuthorizedUser](http://rdoc.info/github/obrie/turntabler/master/Turntabler/AuthorizedUser)
+* [Turntabler::Client](http://rdoc.info/github/obrie/turntabler/master/Turntabler/Client)
+* [Turntabler::Playlist](http://rdoc.info/github/obrie/turntabler/master/Turntabler/Playlist)
+* [Turntabler::Room](http://rdoc.info/github/obrie/turntabler/master/Turntabler/Room)
+* [Turntabler::RoomDirectory](http://rdoc.info/github/obrie/turntabler/master/Turntabler/RoomDirectory)
+* [Turntabler::Song](http://rdoc.info/github/obrie/turntabler/master/Turntabler/Song)
+* [Turntabler::User](http://rdoc.info/github/obrie/turntabler/master/Turntabler/User)
 
 ## Additional Topics
 
