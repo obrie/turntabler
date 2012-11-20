@@ -1,0 +1,7 @@
+--title "turntable"
+--readme README.md
+--no-private
+lib/turntabler.rb
+lib/turntabler/resource.rb
+lib/turntabler/**/*.rb -
+CHANGELOG.md LICENSE
