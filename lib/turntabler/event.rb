@@ -119,7 +119,6 @@ module Turntabler
       new_djs = []
       data['user'].each_with_index do |attrs, index|
         new_djs << user = room.build_user(attrs.merge('placements' => data['placements'][index]))
-        room.listeners << user
         room.djs << user
       end
       new_djs
@@ -129,7 +128,6 @@ module Turntabler
     handle :dj_removed, :rem_dj do
       data['user'].map do |attrs|
         user = room.build_user(attrs)
-        room.listeners << user
         room.djs.delete(user)
         user
       end
@@ -138,7 +136,6 @@ module Turntabler
     # A new moderator was added to the room
     handle :moderator_added, :new_moderator do
       user = room.build_user(data)
-      room.listeners << user
       room.moderators << user
       user
     end
