@@ -3,8 +3,7 @@ require 'em-synchrony/em-http'
 require 'turntabler/resource'
 
 module Turntabler
-  # Represents an individual room in Turntable.  The room must be explicitly
-  # entered before being able to DJ.
+  # Represents an individual room in Turntable
   class Room < Resource
     # Allow the id to be set via the "roomid" attribute
     # @return [String]
@@ -86,7 +85,7 @@ module Turntabler
     attribute :moderators, :moderator_id do |ids|
       Set.new(ids.map {|id| build_user(:_id => id)})
     end
-    
+
     # The current user's friends who are also known to be in the room.  These
     # friends must be connected through a separate network like Facebook or Twitter.
     # 
@@ -147,6 +146,7 @@ module Turntabler
     # @param [Hash] options The configuration options
     # @option options [Boolean] :song_log (false) Whether to include the song log
     # @return [true]
+    # @raise [ArgumentError] if an invalid option is specified
     # @raise [Turntabler::Error] if the command fails
     # @example
     #   room.load                       # => true
@@ -168,11 +168,12 @@ module Turntabler
       end
     end
 
-    # Sets the current attributes for this room, ensures that the full list of
+    # Sets the current attributes for this room, ensuring that the full list of
     # listeners gets set first so that we can use those built users to then fill
     # out the collection of djs, moderators, etc.
     # 
     # @api private
+    # @param [Hash] attrs The attributes to set
     def attributes=(attrs)
       if attrs
         super('users' => attrs.delete('users')) if attrs['users']
@@ -189,6 +190,7 @@ module Turntabler
     # @param [Hash] attributes The attributes to update
     # @option attributes [String] :description
     # @return [true]
+    # @raise [ArgumentError] if an invalid attribute is specified
     # @raise [Turntabler::Error] if the command fails
     # @example
     #   room.update(:description => '...')    # => true
@@ -202,6 +204,7 @@ module Turntabler
 
     # Enters the current room.
     # 
+    # @note This will leave any room the user is already currently in (unless the same room is being entered)
     # @return [true]
     # @raise [Turntabler::Error] if the command fails
     # @example
@@ -210,7 +213,7 @@ module Turntabler
       if client.room != self
         # Leave the old room
         client.room.leave if client.room
-        
+
         # Connect and register with this room
         client.connect(url)
         begin
@@ -222,11 +225,11 @@ module Turntabler
           raise
         end
       end
-      
+
       true
     end
 
-    # Leaves from the current room.
+    # Leaves from the room.
     # 
     # @return [true]
     # @raise [Turntabler::Error] if the command fails
@@ -270,6 +273,8 @@ module Turntabler
     # get created.
     # 
     # @api private
+    # @param [Hash] attrs The attributes representing the user
+    # @return [Turntabler::User]
     def build_user(attrs)
       user = User.new(client, attrs)
       user = if client.user == user
@@ -365,7 +370,7 @@ module Turntabler
       api('room.report', :roomid => id, :section => section, :reason => reason)
       true
     end
-    
+
     private
     # Sets the sticker placements for each dj
     def sticker_placements=(user_placements)

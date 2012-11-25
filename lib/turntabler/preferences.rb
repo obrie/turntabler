@@ -6,37 +6,38 @@ module Turntabler
     # Send e-mails if a fan starts DJing
     # @return [Boolean]
     attribute :notify_dj
-    
+
     # Send e-mails when someone becomes a fan
     # @return [Boolean]
     attribute :notify_fan
-    
+
     # Sends infrequent e-mails about news
     # @return [Boolean]
     attribute :notify_news
-    
+
     # Sends e-mails at random times with a different subsection of the digits of pi
     # @return [Boolean]
     attribute :notify_random
-    
-    # Publishes to facebook songs awesomed in public rooms
+
+    # Publishes to facebook songs voted up in public rooms
     # @return [Boolean]
     attribute :facebook_awesome
-    
+
     # Publishes to facebook when a public room is joined
     # @return [Boolean]
     attribute :facebook_join
-    
+
     # Publishes to facebook when DJing in a public room
     # @return [Boolean]
     attribute :facebook_dj
-    
+
     # Loads the user's current Turntable preferences.
     # 
     # @return [true]
     # @raise [Turntabler::Error] if the command fails
     # @example
-    #   preferences.load    # => true
+    #   preferences.load        # => true
+    #   preferences.notify_dj   # => false
     def load
       data = api('user.get_prefs')
       self.attributes = data['result'].inject({}) do |result, (preference, value, id, description)|
@@ -46,7 +47,7 @@ module Turntabler
       super
     end
 
-    # Updates the preferences.
+    # Updates the user's preferences.
     # 
     # @param [Hash] attributes The attributes to update
     # @option attributes [Boolean] :notify_dj

@@ -50,8 +50,12 @@ module Turntabler
     #   end
     #   
     #   # Interactive, not in reactor / fiber
+    #   Turntabler.interactive
     #   Turntabler.run do
-    #     client.room.become_dj
+    #     @client = ...
+    #   end
+    #   Turntabler.run do
+    #     @client.room.become_dj
     #     # ...
     #   end
     #   

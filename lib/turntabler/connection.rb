@@ -78,7 +78,7 @@ module Turntabler
     def publish(params)
       params[:msgid] = message_id = next_message_id
       params = @default_params.merge(params)
-      
+
       logger.debug "Message sent: #{params.inspect}"
 
       if HTTP_APIS.include?(params[:api])
@@ -86,7 +86,7 @@ module Turntabler
       else
         publish_to_socket(params)
       end
-      
+
       # Add timeout handler
       EventMachine.add_timer(@timeout) do
         dispatch('msgid' => message_id, 'command' => 'response_received', 'error' => 'timed out')
@@ -102,7 +102,7 @@ module Turntabler
       data = "~m~#{message.length}~m~#{message}"
       @socket.send(data)
     end
-    
+
     # Publishes the given params to the HTTP API
     def publish_to_http(params)
       api = params.delete(:api)
@@ -124,7 +124,7 @@ module Turntabler
       event = Faye::WebSocket::API::Event.new('message', :data => "~m~#{Time.now.to_i}~m~#{JSON.generate(message)}")
       on_message(event)
     end
-    
+
     # Runs the configured handler with the given message
     def dispatch(message)
       Turntabler.run { @handler.call(message) } if @handler

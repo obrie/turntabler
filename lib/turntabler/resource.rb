@@ -14,18 +14,18 @@ module Turntabler
 
     class << self
       include Assertions
-      
+
       # Defines a new Turntable attribute on this class.  By default, the name
       # of the attribute is assumed to be the same name that Turntable specifies
       # in its API.  If the names are different, this can be overridden on a
       # per-attribute basis.
       # 
-      # Configuration options:
-      # * +:load+ - Whether the resource should be loaded remotely from
-      #   Turntable in order to access the attribute.  Default is true.
-      # 
-      # == Examples
-      # 
+      # @api private
+      # @param [String] name The public name for the attribute
+      # @param [Hash] options The configuration options
+      # @option options [Boolean] :load (true) Whether the resource should be loaded remotely from Turntable in order to access the attribute
+      # @raise [ArgumentError] if an invalid option is specified
+      # @example
       #   # Define a "name" attribute that maps to a Turntable "name" attribute
       #   attribute :name
       #   
@@ -51,7 +51,6 @@ module Turntabler
       #   # when accessed
       #   attribute :friends, :load => false
       # 
-      # @api private
       # @!macro [attach] attribute
       #   @!attribute [r] $1
       def attribute(name, *turntable_names, &block)
@@ -64,12 +63,12 @@ module Turntabler
           load if instance_variable_get("@#{name}").nil? && !loaded? && options[:load]
           instance_variable_get("@#{name}")
         end
-        
+
         # Query
         define_method("#{name}?") do
           !!__send__(name)
         end
-        
+
         # Typecasting
         block ||= lambda {|value| value}
         define_method("typecast_#{name}", &block)
@@ -123,6 +122,7 @@ module Turntabler
     # "metadata" properties as additional attributes.
     # 
     # @api private
+    # @param [Hash] attributes The updated attributes for the resource
     def attributes=(attributes)
       if attributes
         attributes.each do |attribute, value|
@@ -135,19 +135,21 @@ module Turntabler
         end
       end
     end
-    
+
     # Forces this object to use PP's implementation of inspection.
     # 
     # @api private
+    # @return [String]
     def pretty_print(q)
       q.pp_object(self)
     end
     alias inspect pretty_print_inspect
 
     # Defines the instance variables that should be printed when inspecting this
-    # object.  This ignores the +client+ and +loaded+ attributes.
+    # object.  This ignores the +@client+ and +@loaded+ variables.
     # 
     # @api private
+    # @return [Array<Symbol>]
     def pretty_print_instance_variables
       (instance_variables - [:'@client', :'@loaded']).sort
     end
@@ -155,6 +157,7 @@ module Turntabler
     # Determines whether this resource is equal to another based on their
     # unique identifiers.
     # 
+    # @param [Object] other The object this resource is being compared against
     # @return [Boolean] +true+ if the resource ids are equal, otherwise +false+
     def ==(other)
       if other && other.respond_to?(:id) && other.id

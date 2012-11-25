@@ -29,8 +29,8 @@ module Turntabler
         define_method("typecast_#{command}_event", &block)
         protected :"typecast_#{command}_event"
       end
-      
-      # Determines whether the given command is handled
+
+      # Determines whether the given command is handled.
       # 
       # @param [String] command The command to check for the existence of
       # @return [Boolean] +true+ if the command exists, otherwise +false+
@@ -201,19 +201,19 @@ module Turntabler
 
     # A song search failed to complete
     handle :search_failed
-    
+
     # The name of the event that was triggered
     # @return [String]
     attr_reader :name
-    
+
     # The raw hash of data parsed from the event
-    # @return [Hash]
+    # @return [Hash<String, Object>]
     attr_reader :data
-    
+
     # The typecasted results parsed from the data
     # @return [Array]
     attr_reader :results
-    
+
     # Creates a new event triggered with the given data
     # 
     # @param [Turntabler::Client] client The client that this event is bound to
@@ -226,11 +226,11 @@ module Turntabler
       @results = __send__("typecast_#{command}_event")
       @results = [@results] unless @results.is_a?(Array)
     end
-    
+
     private
     # The client that all APIs filter through
     attr_reader :client
-    
+
     # Gets the current room the user is in
     def room
       client.room

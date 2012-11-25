@@ -9,15 +9,15 @@ module Turntabler
     # The event this handler is bound to
     # @return [String]
     attr_reader :event
-    
+
     # Whether to only call the handler once and then never again
     # @return [Boolean] +true+ if only called once, otherwise +false+
     attr_reader :once
-    
+
     # The data that must be matched in order for the handler to run
     # @return [Hash<String, Object>]
     attr_reader :conditions
-    
+
     # Builds a new handler bound to the given event.
     # 
     # @param [String] event The name of the event to bind to
@@ -36,10 +36,10 @@ module Turntabler
       @block = block
     end
     
-    # Runs this handler with results from the given event.
+    # Runs this handler for each result from the given event.
     # 
-    # @param [Array] event The event being triggered
-    # @return [Boolean] +true+ if conditions were matcher to run the handler, otherwise +false+
+    # @param [Turntabler::Event] event The event being triggered
+    # @return [Boolean] +true+ if conditions were matched to run the handler, otherwise +false+
     def run(event)
       if conditions_match?(event.data)
         # Run the block for each individual result

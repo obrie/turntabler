@@ -1,7 +1,7 @@
 require 'turntabler/resource'
 
 module Turntabler
-  # Represents an instance where a user has been booted from a room
+  # Represents an event where a user has been booted from a room
   class Boot < Resource
     # The user that was booted from the room
     # @return [Turntabler::User]

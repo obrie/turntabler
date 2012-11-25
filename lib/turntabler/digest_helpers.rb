@@ -2,7 +2,7 @@ module Turntabler
   # Provides a set of helper functions for dealing with message digests
   # @api private
   module DigestHelpers
-    # Generates a SHA1 hash from the given data
+    # Generates a SHA1 hash from the given data.
     # 
     # @param [String] data The data to create a hash from
     # @return [String]

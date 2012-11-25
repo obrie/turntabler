@@ -10,7 +10,7 @@ module Turntabler
     # @return [String]
     attribute :status
 
-    # The authenticate token required to connect to the API
+    # The authentication token required to connect to the API
     # @return [String]
     attribute :auth
 
@@ -22,7 +22,8 @@ module Turntabler
     # @return [String]
     attribute :twitter_id, :twitterid
 
-    # The e-mail address the user registered with on Turntable
+    # The e-mail address the user registered with on Turntable.  This is
+    # typically only set if the user didn't log in via Facebook or Twitter.
     # @return [String]
     attribute :email
 
@@ -45,9 +46,9 @@ module Turntabler
 
     # Authenticates the current user with turntable.
     # 
+    # @api private
     # @return [true]
     # @raise [Turntabler::Error] if the command fails
-    # @api private
     def authenticate
       api('user.authenticate')
       true

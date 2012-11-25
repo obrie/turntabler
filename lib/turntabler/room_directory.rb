@@ -46,12 +46,12 @@ module Turntabler
     # @option options [Fixnum] :limit (20) The total number of rooms to list
     # @option options [Fixnum] :skip (0) The number of rooms to skip when loading the list
     # @option options [Fixnum] :favorites (false) Whether to only include rooms marked as favorites
-    # @option options [Fixnum] :available_djs (false) Whether to only include rooms that have dj spots available
-    # @option options [Fixnum] :genre The genre of music being played in the room, .  Possible values are +:rock+, +:electronica+, +:indie+, +:hiphop+, +:pop+, and +:dubstep+.
+    # @option options [Boolean] :available_djs (false) Whether to only include rooms that have dj spots available
+    # @option options [Symbol] :genre The genre of music being played in the room, .  Possible values are +:rock+, +:electronica+, +:indie+, +:hiphop+, +:pop+, and +:dubstep+.
     # @option options [Fixnum] :minimum_listeners (1) The minimum number of listeners in the room
-    # @option options [Fixnum] :sort (:listeners) The order to list rooms in.  Possible values are +:created+, +:listeners+, and +:random+.
+    # @option options [Symbol] :sort (:listeners) The order to list rooms in.  Possible values are +:created+, +:listeners+, and +:random+.
     # @return [Array<Turntabler::Room>]
-    # @raise [ArgumentError] if an invalid option is specified
+    # @raise [ArgumentError] if an invalid option or value is specified
     # @raise [Turntabler::Error] if the command fails
     # @example
     #   rooms.list                                          # => [#<Turntabler::Room ...>, ...]
@@ -70,7 +70,7 @@ module Turntabler
         :minimum_listeners => 1,
         :sort => :listeners
       }.merge(options)
-      
+
       constraints = []
       constraints << :favorites if options[:favorites]
       constraints << :available_djs if options[:available_djs]
@@ -90,7 +90,7 @@ module Turntabler
       data['rooms'].map {|attrs| Room.new(client, attrs)}
     end
 
-    # Get the rooms where your friends are currently in.
+    # Gets the rooms where the current user's friends are currently listening.
     # 
     # @return [Array<Turntabler::Room>]
     # @raise [Turntabler::Error] if the command fails

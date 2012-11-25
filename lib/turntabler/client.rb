@@ -24,8 +24,8 @@ module Turntabler
     attr_reader :id
 
     # Sets the current room the user is in
-    # @param [Turntabler::Room] value The new room
     # @api private
+    # @param [Turntabler::Room] value The new room
     attr_writer :room
 
     # The directory for looking up / creating rooms

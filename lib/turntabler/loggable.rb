@@ -4,6 +4,8 @@ module Turntabler
   module Loggable
     private
     # Delegates access to the logger to Turntabler.logger
+    # 
+    # @return [Logger] The logger configured for this library
     def logger
       Turntabler.logger
     end

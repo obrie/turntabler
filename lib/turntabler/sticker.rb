@@ -19,7 +19,7 @@ module Turntabler
     # @return [String]
     attribute :category
 
-    # How much it costs to purchase this sticker for use
+    # The cost to purchase this sticker for use
     # @return [Fixnum]
     attribute :price
 
@@ -35,7 +35,7 @@ module Turntabler
     # 
     # @param [Fixnum] top The y-coordinate of the sticker
     # @param [Fixnum] left The x-coordinate of the sticker
-    # @param [Fixnum] angle The degree at which the sticker is angled
+    # @param [Float] angle The degree at which the sticker is angled
     # @return [true]
     # @raise [Turntabler::Error] if the command fails
     # @example

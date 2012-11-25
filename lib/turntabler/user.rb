@@ -34,13 +34,13 @@ module Turntabler
     # @return [Fixnum]
     attribute :fans_count, :fans
 
-    # The user's unique identifier on Facebook (only available if the user is
-    # connected to the authorized user through Facebook)
+    # The user's unique identifier on Facebook
+    # @note This is only available if the user is connected to the authorized user through Facebook
     # @return [String]
     attribute :facebook_url, :facebook
     
-    # The user's unique identifier on Twitter (only available if the user is
-    # connected to the authorized user through Twitter)
+    # The user's unique identifier on Twitter
+    # @note This is only available if the user is connected to the authorized user through Twitter
     # @return [String]
     attribute :twitter_id, :twitter, :twitterid_lower
 
@@ -56,7 +56,7 @@ module Turntabler
     # @return [String]
     attribute :top_artists, :topartists
 
-    # Whether on Turntable the user likes to hang out
+    # A description of the rooms on Turntable the user likes to hang out
     # @return [String]
     attribute :hangout
 
@@ -85,7 +85,7 @@ module Turntabler
       self.attributes = data
       super
     end
-    
+
     # Gets the availability status for this user.
     # 
     # @return [String] "available" / "unavailable"
@@ -97,7 +97,7 @@ module Turntabler
       data['presence']['status']
     end
 
-    # Gets the stickers that are currently placed on the user.
+    # Gets the stickers that are currently placed on the user's laptop.
     # 
     # @param [Boolean] reload Whether to forcefully reload the user's list of sticker placements
     # @return [Array<Turntabler::StickerPlacement>]
@@ -213,11 +213,10 @@ module Turntabler
     # Gets the location of the user.
     # 
     # @note This will make the current user a fan of this user
-    # @param [Boolean] all_info Whether full detailed information should be provided about the room and user
-    # @return [Array<Turntabler::Room>]
+    # @return [Turntabler::Room]
     # @raise [Turntabler::Error] if the command fails
     # @example
-    #   user.stalk    # => #<Turntabler::User ...>
+    #   user.stalk    # => #<Turntabler::Room ...>
     def stalk(all_info = false)
       become_fan unless client.user.fan_of.include?(self)
       client.rooms.with_friends.detect do |room|

@@ -19,7 +19,7 @@ module Turntabler
     attribute :left
 
     # The degree at which the sticker is tilted
-    # @return [Fixnum]
+    # @return [Float]
     attribute :angle
   end
 end

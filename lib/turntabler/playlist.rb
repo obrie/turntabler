@@ -29,7 +29,7 @@ module Turntabler
       self.attributes = data
       super()
     end
-    
+
     # Gets the song with the given id.
     # 
     # @param [String] song_id The id for the song
