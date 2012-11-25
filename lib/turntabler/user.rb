@@ -217,7 +217,7 @@ module Turntabler
     # @raise [Turntabler::Error] if the command fails
     # @example
     #   user.stalk    # => #<Turntabler::Room ...>
-    def stalk(all_info = false)
+    def stalk
       become_fan unless client.user.fan_of.include?(self)
       client.rooms.with_friends.detect do |room|
         room.listener(id)
