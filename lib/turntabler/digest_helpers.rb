@@ -1,3 +1,5 @@
+require 'digest/sha1'
+
 module Turntabler
   # Provides a set of helper functions for dealing with message digests
   # @api private

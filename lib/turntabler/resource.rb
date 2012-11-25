@@ -1,5 +1,4 @@
 require 'pp'
-require 'digest/sha1'
 require 'turntabler/assertions'
 require 'turntabler/digest_helpers'
 
