@@ -40,7 +40,7 @@ module Turntabler
     #   preferences.notify_dj   # => false
     def load
       data = api('user.get_prefs')
-      self.attributes = data['result'].inject({}) do |result, (preference, value, id, description)|
+      self.attributes = data['result'].inject({}) do |result, (preference, value, *)|
         result[preference] = value
         result
       end

@@ -54,8 +54,8 @@ module Turntabler
 
     # The host to connect to for joining this room
     # @return [String]
-    attribute :host, :chatserver do |value|
-      value[0]
+    attribute :host, :chatserver do |(host, *)|
+      host
     end
 
     # Whether this room is being featured by Turntable
@@ -126,10 +126,11 @@ module Turntabler
     # @return [String]
     # @raise [Turntabler::Error] if the host lookup fails
     def host
-      @host ||= begin
+      begin
         response = EventMachine::HttpRequest.new("http://turntable.fm/api/room.which_chatserver?roomid=#{id}").get.response
-        JSON.parse(response)[1]['chatserver'][0]
-      end
+        self.attributes = JSON.parse(response)[1]
+      end unless @host
+      @host
     end
 
     # Gets the configured chat url
