@@ -202,7 +202,7 @@ module Turntabler
       assert_valid_values(name, *%w(mac pc linux chrome iphone cake intel android))
 
       api('user.modify', :laptop => name)
-      self.attriutes = {'laptop' => name}
+      self.attributes = {'laptop' => name}
       true
     end
 
