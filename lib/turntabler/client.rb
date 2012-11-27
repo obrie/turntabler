@@ -103,8 +103,8 @@ module Turntabler
         @connection.start
 
         # Wait until the connection is authenticated
-        wait do |fiber|
-          on(:session_missing, :once => true) { fiber.resume }
+        wait do |&resume|
+          on(:session_missing, :once => true) { resume.call }
         end
       end
 
@@ -120,8 +120,8 @@ module Turntabler
         @update_timer = nil
         @connection.close
 
-        wait do |fiber|
-          on(:session_ended, :once => true) { fiber.resume }
+        wait do |&resume|
+          on(:session_ended, :once => true) { resume.call }
         end
 
         on_session_ended(allow_reconnect)
@@ -151,8 +151,8 @@ module Turntabler
       message_id = @connection.publish(params.merge(:api => command))
 
       # Wait until we get a response for the given message
-      data = wait do |fiber|
-        on(:response_received, :once => true, :if => {'msgid' => message_id}) {|data| fiber.resume(data)}
+      data = wait do |&resume|
+        on(:response_received, :once => true, :if => {'msgid' => message_id}) {|data| resume.call(data)}
       end
 
       if data['success']
@@ -406,9 +406,9 @@ module Turntabler
       api('file.search', :query => query, :page => options[:page])
 
       # Wait for the async callback
-      songs = wait do |fiber|
-        on(:search_completed, :once => true, :if => {'query' => query}) {|songs| fiber.resume(songs)}
-        on(:search_failed, :once => true, :if => {'query' => query}) { fiber.resume }
+      songs = wait do |&resume|
+        on(:search_completed, :once => true, :if => {'query' => query}) {|songs| resume.call(songs)}
+        on(:search_failed, :once => true, :if => {'query' => query}) { resume.call }
       end
 
       songs || raise(Error, 'Search failed to complete')
@@ -469,10 +469,22 @@ module Turntabler
 
     # Pauses the current fiber until it is resumed with response data.  This
     # can only get resumed explicitly by the provided block.
-    def wait
+    def wait(&block)
       fiber = Fiber.current
-      yield(fiber)
-      Fiber.yield
+
+      # Resume the fiber when a response is received
+      allow_resume = true
+      block.call do |*args|
+        fiber.resume(*args) if allow_resume
+      end
+
+      # Attempt to pause the fiber until a response is received
+      begin
+        Fiber.yield
+      rescue FiberError => ex
+        allow_resume = false
+        raise Error, 'Turntabler APIs cannot be called from root fiber; use Turntabler.run { ... } instead'
+      end
     end
   end
 end
