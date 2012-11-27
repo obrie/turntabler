@@ -336,6 +336,21 @@ module Turntabler
       user_id ? User.new(self, :_id => user_id) : @user
     end
 
+    # Gets the user with the given DJ name.  This should only be used if the id
+    # of the user is unknown.
+    # 
+    # @param [String] name The user's DJ name
+    # @return [Turntabler::User]
+    # @raise [Turntabler::Error] if the command fails
+    # @example
+    #   client.user_by_name('DJSpinster')   # => #<Turntabler::User id="a34bd..." ...>
+    def user_by_name(name)
+      data = api('user.get_id', :name => name)
+      user = self.user(data['userid'])
+      user.attributes = {'name' => name}
+      user
+    end
+
     # Get all avatars availble on Turntable.
     # 
     # @return [Array<Turntabler::Avatar>]
