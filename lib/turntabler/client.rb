@@ -37,10 +37,10 @@ module Turntabler
     attr_reader :timeout
     
     # Creates a new client for communicating with Turntable.fm with the given
-    # user id / auth token.
+    # email / password.
     # 
-    # @param [String] user_id The user to authenticate with
-    # @param [String] auth The authentication token for the user
+    # @param [String] email The e-mail address of the user to authenticate with
+    # @param [String] password The Turntable password associated with the email address
     # @param [Hash] options The configuration options for the client
     # @option options [String] :id The unique identifier representing this client
     # @option options [String] :room The id of the room to initially enter
@@ -49,7 +49,7 @@ module Turntabler
     # @option options [Fixnum] :reconnect_wait (5) The amount of seconds to wait before reconnecting
     # @raise [Turntabler::Error] if an invalid option is specified
     # @yield Runs the given block within the context if the client (for DSL-type usage)
-    def initialize(user_id, auth, options = {}, &block)
+    def initialize(email, password, options = {}, &block)
       options = {
         :id => "#{Time.now.to_i}-#{rand}",
         :timeout => 10,
@@ -59,7 +59,7 @@ module Turntabler
       assert_valid_keys(options, :id, :room, :url, :timeout, :reconnect, :reconnect_wait)
 
       @id = options[:id]
-      @user = AuthorizedUser.new(self, :_id => user_id, :auth => auth)
+      @user = AuthorizedUser.new(self, :email => email, :password => password)
       @rooms = RoomDirectory.new(self)
       @event_handlers = {}
       @timeout = options[:timeout]

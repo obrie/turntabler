@@ -2,14 +2,14 @@
 # On/Off bot switch
 require 'turntabler'
 
-AUTH = ENV['AUTH']  # 'auth+live+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-USER = ENV['USER']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
-ROOM = ENV['ROOM']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
+EMAIL = ENV['EMAIL']        # 'xxxxx@xxxxx.com'
+PASSWORD = ENV['PASSWORD']  # 'xxxxx'
+ROOM = ENV['ROOM']          # 'xxxxxxxxxxxxxxxxxxxxxxxx'
 
 # Bot is on by default
 is_on = true
 
-TT.run(USER, AUTH, :room => ROOM) do
+TT.run(EMAIL, PASSWORD, :room => ROOM) do
   on :user_spoke do |message|
     if is_on
       # The bot is on

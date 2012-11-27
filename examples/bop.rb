@@ -2,11 +2,11 @@
 # Vote up a song when someone says "bop" in the chat
 require 'turntabler'
 
-AUTH = ENV['AUTH']  # 'auth+live+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-USER = ENV['USER']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
-ROOM = ENV['ROOM']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
+EMAIL = ENV['EMAIL']        # 'xxxxx@xxxxx.com'
+PASSWORD = ENV['PASSWORD']  # 'xxxxx'
+ROOM = ENV['ROOM']          # 'xxxxxxxxxxxxxxxxxxxxxxxx'
 
-Turntabler.run(USER, AUTH, :room => ROOM) do
+TT.run(EMAIL, PASSWORD, :room => ROOM) do
   on :user_spoke do |message|
     if message.text =~ /bop/
       client.room.current_song.vote

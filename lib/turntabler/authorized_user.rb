@@ -6,13 +6,13 @@ require 'turntabler/sticker_placement'
 module Turntabler
   # Represents a user who has authorized with the Turntable service
   class AuthorizedUser < User
+    # The authentication token required to connect to the API
+    # @return [String]
+    attribute :auth, :userauth
+
     # The current availability status of the user ("available", "unavailable", or "away")
     # @return [String]
     attribute :status
-
-    # The authentication token required to connect to the API
-    # @return [String]
-    attribute :auth
 
     # The user's unique identifier on Facebook
     # @return [String]
@@ -27,10 +27,10 @@ module Turntabler
     # @return [String]
     attribute :email
 
-    # Whether the user has a password associated with their account.  This is
-    # typically only the case if the user didn't log in via Facebook or Twitter.
-    # @return [Boolean]
-    attribute :has_password, :has_tt_password
+    # The password associated with the e-mail address registered with on Turntable.
+    # This is typically only set if the user didn't log in via Facebook or Twitter.
+    # @return [String]
+    attribute :password
 
     # The user's current Turntable preferences
     # @return [Turntabler::Preferences]
@@ -42,6 +42,41 @@ module Turntabler
       @playlists = {}
       @preferences = Preferences.new(client)
       super
+    end
+
+    # Gets the Turntable id associated with this user for use with API services.
+    # This will log the user in via email / password if it's not already set.
+    # 
+    # @return [String]
+    # @raise [Turntabler::Error] if the command fails
+    def id
+      login unless @id
+      @id
+    end
+
+    # Gets the authentication token associated with this user for use with API
+    # services.  This will log the user in via email / password if it's not already
+    # set.
+    # 
+    # @return [String]
+    # @raise [Turntabler::Error] if the command fails
+    def auth
+      login unless @auth
+      @auth
+    end
+
+    # Logs the user in using the associated e-mail address / password.  This will
+    # generate a user id / auth token for authentication with the API services.
+    # 
+    # @api private
+    # @return [true]
+    # @raise [Turntabler::Error] if the command fails
+    def login
+      response = EventMachine::HttpRequest.new('https://turntable.fm/api/user.email_login').get(:query => {:email => email, :password => password, :client => client.id}).response
+      data = JSON.parse(response)
+      raise(Error, data[1]['err']) unless data[0]
+      self.attributes = data[1]
+      true
     end
 
     # Authenticates the current user with turntable.

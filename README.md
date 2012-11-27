@@ -88,11 +88,11 @@ Below is an example of many of the features offered by this API, including:
 ```ruby
 require 'turntabler'
 
-USER = ENV['USER']
-AUTH = ENV['AUTH']
+EMAIL = ENV['EMAIL']
+PASSWORD = ENV['PASSWORD']
 
 Turntabler.run do
-  client = Turntabler::Client.new(USER, AUTH)
+  client = Turntabler::Client.new(EMAIL, PASSWORD)
   
   # Events
   client.on :user_entered do |user|
@@ -201,7 +201,7 @@ result, you can interact with the API like so:
 
 ```ruby
 TT.run do
-  client = TT::Client.new(USER, AUTH, :room => ROOM)
+  client = TT::Client.new(EMAIL, PASSWORD, :room => ROOM)
   client.room.become_dj
   # ...
 end
@@ -223,7 +223,7 @@ For example:
 1.9.3-p286 :003 > client = nil
 => nil
 1.9.3-p286 :004 > TT.run do
-1.9.3-p286 :005 >   client = Turntabler::Client.new(USER, AUTH)
+1.9.3-p286 :005 >   client = Turntabler::Client.new(EMAIL, PASSWORD)
 1.9.3-p286 :006 > end
 => nil
 D, [2012-11-20T08:36:08.025015 #21419] DEBUG -- : Socket opened
@@ -260,7 +260,7 @@ There are two ways to do this:
 ```ruby
 # Using the TT.run shortcut:
 
-TT.run(USER, AUTH, :room => ROOM) do
+TT.run(EMAIL, PASSWORD, :room => ROOM) do
   room.dj
   on :user_entered do
     # ...
@@ -270,7 +270,7 @@ end
 # Using Turntabler::Client:
 
 TT.run do
-  Turntabler::Client.new(USER, AUTH, :room => ROOM) do
+  Turntabler::Client.new(EMAIL, PASSWORD, :room => ROOM) do
     room.dj
     on :user_entered do
       # ...
@@ -287,7 +287,7 @@ The equivalent, non-DSL example looks like so:
 
 ```ruby
 TT.run do
-  client = Turntabler::Client.new(USER, AUTH, :room => ROOM)
+  client = Turntabler::Client.new(EMAIL, PASSWORD, :room => ROOM)
   client.room.dj
   client.on :user_entered do
     # ...
@@ -312,7 +312,7 @@ already running EventMachine and already executing code within a non-root Fiber
 you can just run your block like normal:
 
 ```ruby
-client = Turntabler::Client.new(USER, AUTH, :room => ROOM)
+client = Turntabler::Client.new(EMAIL, PASSWORD, :room => ROOM)
 songs = client.user.playlist.songs
 # ...
 ```
@@ -328,7 +328,7 @@ keep attempting to re-open a connection when it's been closed.
 For example:
 
 ```ruby
-TT.run(USER, AUTH, :room => ROOM, :reconnect => true, :reconnect_wait => 60) do
+TT.run(EMAIL, PASSWORD, :room => ROOM, :reconnect => true, :reconnect_wait => 60) do
   # ...
 end
 ```

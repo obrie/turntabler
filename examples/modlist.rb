@@ -2,14 +2,14 @@
 # Moderator commands
 require 'turntabler'
 
-AUTH = ENV['AUTH']  # 'auth+live+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-USER = ENV['USER']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
-ROOM = ENV['ROOM']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
+EMAIL = ENV['EMAIL']        # 'xxxxx@xxxxx.com'
+PASSWORD = ENV['PASSWORD']  # 'xxxxx'
+ROOM = ENV['ROOM']          # 'xxxxxxxxxxxxxxxxxxxxxxxx'
 
 # List of moderator ids
 moderator_ids = ['xxxxxxxxxxxxxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxxxxxxxxxx']
 
-TT.run(USER, AUTH, :room => ROOM) do
+TT.run(EMAIL, PASSWORD, :room => ROOM) do
   on :user_spoke do |message|
     # Response to "/mod" command
     if moderator_ids.include?(message.sender.id) && message.text =~ /^\/mod$/

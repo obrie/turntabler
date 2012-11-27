@@ -2,14 +2,14 @@
 # Keep the last activity timestamp of everyone in the room
 require 'turntabler'
 
-AUTH = ENV['AUTH']  # 'auth+live+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-USER = ENV['USER']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
-ROOM = ENV['ROOM']  # 'xxxxxxxxxxxxxxxxxxxxxxxx'
+EMAIL = ENV['EMAIL']        # 'xxxxx@xxxxx.com'
+PASSWORD = ENV['PASSWORD']  # 'xxxxx'
+ROOM = ENV['ROOM']          # 'xxxxxxxxxxxxxxxxxxxxxxxx'
 
 # Reset the users list
 last_activity = {}
 
-Turntabler.run(USER, AUTH, :room => ROOM) do
+TT.run(EMAIL, PASSWORD, :room => ROOM) do
   room.listeners.each do |user|
     last_activity[user.id] = Time.now
   end

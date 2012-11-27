@@ -65,7 +65,7 @@ module Turntabler
     # 
     # @example DSL
     #   # Takes the same arguments as Turntabler::Client
-    #   Turntabler.run(USER, AUTH, :room => ROOM) do
+    #   Turntabler.run(EMAIL, PASSWORD, :room => ROOM) do
     #     room.become_dj
     #     on :user_enter do
     #       # ...
