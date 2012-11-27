@@ -67,7 +67,7 @@ module Turntabler
     attribute :votes, :votelog, :load => false do |votes|
       votes.each do |(user_id, direction)|
         self.votes.delete_if {|vote| vote.user.id == user_id}
-        self.votes << Vote.new(client, :userid => user_id, :direction => direction)
+        self.votes << Vote.new(client, :userid => user_id, :direction => direction) if user_id && !user_id.empty?
       end
       self.votes
     end
