@@ -1,5 +1,6 @@
 # master
 
+* Allow authentication via user ids / auth tokens if a password is unavailable
 * Authenticate using emails / passwords instead of user ids / auth tokens
 * Fix exceptions in callbacks not causing one-time callbacks to be unregistered
 * Only catch StandardError, not Exception, in Turntabler#run

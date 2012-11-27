@@ -44,6 +44,8 @@ module Turntabler
     # @param [Hash] options The configuration options for the client
     # @option options [String] :id The unique identifier representing this client
     # @option options [String] :room The id of the room to initially enter
+    # @option options [String] :user_id The Turntable id for the authenticating user (required if the user does not have an associated password)
+    # @option options [String] :auth The authentication token for the user (required if the user does not have an associated password)
     # @option options [Fixnum] :timeout (10) The amount of seconds to allow to elapse for requests before timing out
     # @option options [Boolean] :reconnect (false) Whether to allow the client to automatically reconnect when disconnected either by Turntable or by the network
     # @option options [Fixnum] :reconnect_wait (5) The amount of seconds to wait before reconnecting
@@ -56,10 +58,10 @@ module Turntabler
         :reconnect => false,
         :reconnect_wait => 5
       }.merge(options)
-      assert_valid_keys(options, :id, :room, :url, :timeout, :reconnect, :reconnect_wait)
+      assert_valid_keys(options, :id, :room, :url, :user_id, :auth, :timeout, :reconnect, :reconnect_wait)
 
       @id = options[:id]
-      @user = AuthorizedUser.new(self, :email => email, :password => password)
+      @user = AuthorizedUser.new(self, :email => email, :password => password, :_id => options[:user_id], :userauth => options[:auth])
       @rooms = RoomDirectory.new(self)
       @event_handlers = {}
       @timeout = options[:timeout]
