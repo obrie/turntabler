@@ -1,10 +1,13 @@
+require 'turntabler/assertions'
 require 'turntabler/event'
+require 'turntabler/loggable'
 
 module Turntabler
   # Represents a callback that's been bound to a particular event
   # @api private
   class Handler
     include Assertions
+    include Loggable
 
     # The event this handler is bound to
     # @return [String]
@@ -35,7 +38,7 @@ module Turntabler
       @conditions = options[:if]
       @block = block
     end
-    
+
     # Runs this handler for each result from the given event.
     # 
     # @param [Turntabler::Event] event The event being triggered
@@ -44,9 +47,13 @@ module Turntabler
       if conditions_match?(event.data)
         # Run the block for each individual result
         event.results.each do |result|
-          @block.call(*[result].compact)
+          begin
+            @block.call(*[result].compact)
+          rescue StandardError => ex
+            logger.error(([ex.message] + ex.backtrace) * "\n")
+          end
         end
-        
+
         true
       else
         false

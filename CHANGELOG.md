@@ -1,5 +1,6 @@
 # master
 
+* Fix exceptions in callbacks not causing one-time callbacks to be unregistered
 * Only catch StandardError, not Exception, in Turntabler#run
 * Fix song votes being tracked with empty user ids
 * Fix the current dj's points not getting updated on song_voted events
