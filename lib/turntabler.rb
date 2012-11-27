@@ -103,4 +103,4 @@ module Turntabler
 end
 
 # Provide a simple alias (akin to EM / EventMachine)
-TT = Turntabler
+TT = Turntabler unless defined?(TT)

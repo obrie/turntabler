@@ -1,5 +1,6 @@
 # master
 
+* Don't re-define the TT constant if it's already been defined
 * Add Turntabler::Client#user_by_name for looking up users by their name instead of id
 * Allow authentication via user ids / auth tokens if a password is unavailable
 * Authenticate using emails / passwords instead of user ids / auth tokens
