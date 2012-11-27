@@ -168,8 +168,15 @@ module Turntabler
 
     # A vote was cast for the song
     handle :song_voted, :update_votes do
+      song = room.current_song
+      initial_up_votes_count = song.up_votes_count
       room.attributes = data['room']
-      room.current_song
+
+      # Update DJ point count
+      dj = room.current_dj
+      dj.attributes = {'points' => dj.points + song.up_votes_count - initial_up_votes_count}
+
+      song
     end
 
     # A user in the room has queued the current song onto their playlist
