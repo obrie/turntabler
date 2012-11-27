@@ -149,19 +149,20 @@ module Turntabler
 
     # There are no more songs to play in the room
     handle :song_unavailable, :nosong do
+      client.on_message('command' => 'song_ended') if room.current_song
       room.attributes = data['room'].merge('current_song' => nil)
       nil
     end
 
     # A new song has started playing
     handle :song_started, :newsong do
+      client.on_message('command' => 'song_ended') if room.current_song
       room.attributes = data['room']
       room.current_song
     end
 
     # The current song has ended
-    handle :song_ended, :endsong do
-      room.attributes = data['room']
+    handle :song_ended do
       room.current_song
     end
 
@@ -178,11 +179,13 @@ module Turntabler
 
     # A song was skipped due to a copyright claim
     handle :song_blocked do
+      client.on_message('command' => 'song_ended') if room.current_song
       Song.new(client, data)
     end
 
     # A song was skipped due to a limit on # of plays per hour
     handle :song_limited, :dmca_error do
+      client.on_message('command' => 'song_ended') if room.current_song
       Song.new(client, data)
     end
 

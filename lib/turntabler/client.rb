@@ -397,9 +397,12 @@ module Turntabler
       songs || raise(Error, 'Search failed to complete')
     end
 
-    private
     # Callback when a message has been received from Turntable.  This will run
     # any handlers registered for the event associated with the message.
+    # 
+    # @api private
+    # @param [Hash<String, Object>] data The message data received
+    # @return nil
     def on_message(data)
       if Event.command?(data['command'])
         event = Event.new(self, data)
@@ -411,6 +414,7 @@ module Turntabler
       end
     end
     
+    private
     # Callback when a heartbeat message has been received from Turntable determining
     # whether this client is still alive.
     def on_heartbeat
