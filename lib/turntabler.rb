@@ -88,7 +88,7 @@ module Turntabler
                 # Just run the block within a fiber
                 block.call
               end
-            rescue Exception => ex
+            rescue StandardError => ex
               logger.error(([ex.message] + ex.backtrace) * "\n")
             end
           end
