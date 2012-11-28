@@ -36,9 +36,9 @@ This project was built from the ground-up by Rubyists for Rubyists.  While prior
 projects in other languages were used for guidance on some of the implementation,
 the design is meant to take advantage of the various features offered by Ruby 1.9+.
 
-Some brief, high-level features include:
+At a high level, this project features:
 
-* Evented, non-blocking IO
+* Evented, non-blocking I/O
 * Fiber-aware, untangled callbacks
 * Interactive console support
 * Clean, object-oriented APIs
@@ -177,10 +177,10 @@ directory in the repository.
 
 So you may be asking "Why another Turntable.FM API library?" or "Why re-build
 this in Ruby when you have a stable Javascript project?"  Simply put, I felt that
-many of the high-level features highlighted in the Description section of this
+many of the high-level details highlighted in the Description section of this
 document were missing in existing libraries.
 
-Some of those features include evented I/O, untangled callbacks, object-oriented
+Some of those details include evented I/O, untangled callbacks, object-oriented
 APIs, external API consistency, internal state management, auto lazy-loading, etc.
 This library also strives to be a complete implementation, easy to use / play
 around with, and generally just put together a more organized fashion.
