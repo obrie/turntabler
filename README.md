@@ -183,7 +183,7 @@ document were missing in each of those existing libraries.
 Existing implementations include:
 
 * [turntable-api-rb](https://github.com/lmcalpin/turntable-api-rb)
-* [ruby_ttapi](https://github.com/alaingilbert/Turntable-API)
+* [ruby_ttapi](https://github.com/alaingilbert/Turntable-API/tree/ruby_ttapi)
 * [TurntableBot](https://github.com/mrhazel/TurntableBot)
 
 My personal belief is that none of these libraries reflect the simplicity that
