@@ -1,5 +1,7 @@
 # master
 
+## 0.1.0 / 2012-11-27
+
 * Add :reconnected event for hooking in logic when a client reconnects
 * Gracefully handle error cases where APIs are called from a root fiber
 * Don't re-define the TT constant if it's already been defined
