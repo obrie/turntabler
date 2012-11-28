@@ -168,6 +168,9 @@ can do with turntabler.  For a *complete* list, see the API documentation, espec
 * [Turntabler::Song](http://rdoc.info/github/obrie/turntabler/master/frames/Turntabler/Song)
 * [Turntabler::User](http://rdoc.info/github/obrie/turntabler/master/frames/Turntabler/User)
 
+For additional examples, see the [examples](https://github.com/obrie/turntabler/tree/master/examples)
+directory in the repository.
+
 ## Additional Topics
 
 ### Differences with existing libraries
