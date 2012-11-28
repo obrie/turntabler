@@ -56,6 +56,9 @@ module Turntabler
     # The client's connection has closed
     handle :session_ended
 
+    # The client re-connected after previously being disconnected
+    handle :reconnected
+
     # A heartbeat was received from Turntable to ensure the client's connection
     # is still valid
     handle :heartbeat

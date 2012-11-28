@@ -171,6 +171,16 @@ module Turntabler
     # @option options [Boolean] :once (false) Whether to only run the handler once
     # @return [true]
     # 
+    # == Client Events
+    # 
+    # * +:reconnected+ - The client reconnected (and re-entered any room that the user was previously in)
+    # 
+    # @example
+    #   client.on :reconnected do
+    #     client.room.dj
+    #     # ...
+    #   end
+    # 
     # == Room Events
     # 
     # * +:room_updated+ - Information about the room was updated
@@ -463,6 +473,7 @@ module Turntabler
       if @reconnect && allow_reconnect
         EM::Synchrony.add_timer(@reconnect_wait) do
           room ? room.enter : connect(url)
+          on_message('command' => 'reconnected')
         end
       end
     end

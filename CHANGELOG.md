@@ -1,5 +1,6 @@
 # master
 
+* Add :reconnected event for hooking in logic when a client reconnects
 * Gracefully handle error cases where APIs are called from a root fiber
 * Don't re-define the TT constant if it's already been defined
 * Add Turntabler::Client#user_by_name for looking up users by their name instead of id
