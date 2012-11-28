@@ -177,25 +177,18 @@ directory in the repository.
 
 So you may be asking "Why another Turntable.FM API library?" or "Why re-build
 this in Ruby when you have a stable Javascript project?"  Simply put, I felt that
-all of the high-level features highlighted in the Description section of this
-document were missing in each of those existing libraries.
+many of the high-level features highlighted in the Description section of this
+document were missing in existing libraries.
 
-Existing implementations include:
+Some of those features include evented I/O, untangled callbacks, object-oriented
+APIs, external API consistency, internal state management, auto lazy-loading, etc.
+This library also strives to be a complete implementation, easy to use / play
+around with, and generally just put together as an organized library instead of
+a script.
 
-* [turntable-api-rb](https://github.com/lmcalpin/turntable-api-rb)
-* [ruby_ttapi](https://github.com/alaingilbert/Turntable-API/tree/ruby_ttapi)
-* [TurntableBot](https://github.com/mrhazel/TurntableBot)
-
-My personal belief is that none of these libraries reflect the simplicity that
-you can build libraries with in Ruby.  Those include evented I/O, untangled
-callbacks, object-oriented APIs, external API consistency, internal state
-management, auto lazy-loading, etc.  Some of these libraries are also either
-incomplete implementations, difficult to use / play around with, or generally
-just put together as a script instead of an organized library.
-
-However, by no means does that mean I'm attempting to belittle the efforts put
-forth by these authors -- all of their work provided the foundation necessary to
-build out this project.
+By no means does this discredit the significance of the efforts put forth by the
+authors of these existing libraries -- all of their work provided the foundation
+necessary to build out this project.
 
 ### Authentication
 
