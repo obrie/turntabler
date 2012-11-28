@@ -1,5 +1,7 @@
 # master
 
+## 0.1.1 / 2012-11-27
+
 * Fix gemspec filename
 
 ## 0.1.0 / 2012-11-27
