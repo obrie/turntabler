@@ -53,8 +53,7 @@ Some brief, high-level features include:
 
 Turntable features include management of:
 
-* User status
-* User profiles
+* User status / profile
 * Site preferences
 * Avatars
 * Laptops / stickers
@@ -63,8 +62,7 @@ Turntable features include management of:
 * Buddies (Twitter / Facebook)
 * Blocked users
 * Private messages
-* Advanced room listings
-* Room search
+* Advanced room search / listings
 * Room favorites
 * Room profiles
 * Room chat
@@ -97,7 +95,7 @@ Turntabler.run do
   # Events
   client.on :user_entered do |user|
     puts "#{user.name} entered the room"
-    user.become_fan
+    user.become_fan   # => true
   end
 
   client.on :user_left do |user|
@@ -106,7 +104,7 @@ Turntabler.run do
 
   client.on :user_spoke do |message|
     if message.text =~ /bop/
-      client.room.current_song.vote
+      client.room.current_song.vote   # => true
     end
   end
 
@@ -119,52 +117,56 @@ Turntabler.run do
   end
 
   # Authorized user interactions
-  user = client.user
-  user.fan_of
-  user.fans
-  user.playlist.songs
-  user.blocks
-  user.buddies
+  user = client.user                                # => #<Turntabler::AuthorizedUser:0x95631b0 @email="ben.zelano@gmail.com" ...>
+  user.fan_of                                       # => [#<Turntabler::User:0x95ccb38 @id="d5616b31654e8b22a7a1eef0">, ...]
+  user.fans                                         # => [#<Turntabler::User:0x95dd1cc @id="d5616b31654e8b22a7a1eef0">, ...]
+  user.playlist.songs                               # => [#<Turntabler::Song:0x9610b44 @album="Abbey Road" ...>, ...]
+  user.blocks                                       # => [#<Turntabler::User:0x9792724 @id="19125d4da3b09562b2cf68b6">, ...]
+  user.buddies                                      # => [#<Turntabler::User:0x9792580 @id="efff38aeb7b9334164c1b630">, ...]
   
   # Room Directory
-  client.rooms.list(:favorites => true)
-  client.rooms.list(:genre => :rock)
+  client.rooms.list(:favorites => true)             # => []
+  client.rooms.list(:genre => :rock)                # => [#<Turntabler::Room:0x985d474 @id="4e4986bb14169c5f241318a6", ...>, ...]
   client.rooms.list(:genre => :rock, :available_djs => true, :minimum_listeners => 5)
-  client.rooms.with_friends
-  client.room('...').listeners
+  # => [#<Turntabler::Room:0x91c1d04 @id="4f4a5874a3f75128aa006c17", ...>, ...]
+  client.rooms.with_friends                         # => [#<Turntabler::Room:0x9674c98 @id="50b4c1e2df5bcf4af666f876", ...>, ...]
+  client.room('4dff1eac14169c565800892e').listeners # => #<Set: {#<Turntabler::User:0x96340bc @id="4e1341e2a3f75114d003c591" ...>, ...}>
   
   # Room interaction
-  room = client.room
-  room.add_as_favorite
-  room.become_dj
-  room.say "Hey guys!"
+  client.rooms.create("My Test Room #{rand}").enter # => true
+  room = client.room                                # => #<Turntabler::Room:0x99a16dc @name="My Test Room 0.24300857307298018" ...>
+  room.add_as_favorite                              # => true
+  room.become_dj                                    # => true
+  room.say "Hey guys!"                              # => true
   
   # User interaction
-  user.listeners.each do |listener|
-    listener.messages
-    listener.website
-    listener.facebook_url
-    listener.sticker_placements
-    listener.say "Welcome to the room!"
+  listeners = room.listeners                        # => #<Set: {#<Turntabler::User:0x95631b0 @id="309ba75b6385b83e110923bd" ..., ...}>
+  listeners.each do |listener|
+    listener.messages                               # => [#<Turntabler::Message:0x99aa1ec @content="Hey man!" ...>, ...]
+    listener.website                                # => "http://mypersonalwebsite.com"
+    listener.facebook_url                           # => "https://www.facebook.com/firstname.lastname"
+    listener.sticker_placements                     # => [#<Turntabler::StickerPlacement:0x9861024 @angle=0 ...>, ...]
+    listener.say "Welcome to the room!"             # => true
   end
   
   # Songs
-  client.search_song('Rolling Stones').each do |song|
-    song.enqueue
+  songs = client.search_song('Rolling Stones')      # => [#<Turntabler::Song:0x983c198 @album="Tattoo You (2009 Remaster)" ...>, ...]
+  songs.each do
+    song.enqueue                                    # => true
   end
 end
 ```
 
-The examples above is just a very, very small subset of the possible things you
+The example above is just a very, very small subset of the possible things you
 can do with turntabler.  For a *complete* list, see the API documentation, especially:
 
-* [Turntabler::AuthorizedUser](http://rdoc.info/github/obrie/turntabler/master/Turntabler/AuthorizedUser)
-* [Turntabler::Client](http://rdoc.info/github/obrie/turntabler/master/Turntabler/Client)
-* [Turntabler::Playlist](http://rdoc.info/github/obrie/turntabler/master/Turntabler/Playlist)
-* [Turntabler::Room](http://rdoc.info/github/obrie/turntabler/master/Turntabler/Room)
-* [Turntabler::RoomDirectory](http://rdoc.info/github/obrie/turntabler/master/Turntabler/RoomDirectory)
-* [Turntabler::Song](http://rdoc.info/github/obrie/turntabler/master/Turntabler/Song)
-* [Turntabler::User](http://rdoc.info/github/obrie/turntabler/master/Turntabler/User)
+* [Turntabler::AuthorizedUser](http://rdoc.info/github/obrie/turntabler/master/frames/Turntabler/AuthorizedUser)
+* [Turntabler::Client](http://rdoc.info/github/obrie/turntabler/master/frames/Turntabler/Client)
+* [Turntabler::Playlist](http://rdoc.info/github/obrie/turntabler/master/frames/Turntabler/Playlist)
+* [Turntabler::Room](http://rdoc.info/github/obrie/turntabler/master/frames/Turntabler/Room)
+* [Turntabler::RoomDirectory](http://rdoc.info/github/obrie/turntabler/master/frames/Turntabler/RoomDirectory)
+* [Turntabler::Song](http://rdoc.info/github/obrie/turntabler/master/frames/Turntabler/Song)
+* [Turntabler::User](http://rdoc.info/github/obrie/turntabler/master/frames/Turntabler/User)
 
 ## Additional Topics
 
@@ -181,16 +183,49 @@ Existing implementations include:
 * [ruby_ttapi](https://github.com/alaingilbert/Turntable-API)
 * [TurntableBot](https://github.com/mrhazel/TurntableBot)
 
-My personal believe is that none of these reflect the simplicity that you can
-build libraries with in Ruby.  Those include evented I/O, untangled callbacks,
-object-oriented APIs, external API consistency, internal state management,
-auto lazy-loading, etc.  Some of these libraries are also either incomplete
-implementations, difficult to use / play around with, or generally just put
-together as a script instead of a thoughtfully-designed library.
+My personal belief is that none of these libraries reflect the simplicity that
+you can build libraries with in Ruby.  Those include evented I/O, untangled
+callbacks, object-oriented APIs, external API consistency, internal state
+management, auto lazy-loading, etc.  Some of these libraries are also either
+incomplete implementations, difficult to use / play around with, or generally
+just put together as a script instead of an organized library.
 
 However, by no means does that mean I'm attempting to belittle the efforts put
-forther by these authors -- all of their work provided the foundation necessary
-to build out this project.
+forth by these authors -- all of their work provided the foundation necessary to
+build out this project.
+
+### Authentication
+
+By default, turntabler authenticates users with the e-mail address and password
+associated with their account.  For example:
+
+```ruby
+TT.run do
+  client = TT::Client.new(EMAIL, PASSWORD)
+  # ...
+end
+```
+
+However, older Turntable accounts do not have e-mail addresses or passwords
+associated with them since they were initially created through a third-party
+social network like Facebook or Twitter.  If you're using an account like that,
+you can do one of two things: (1) Add an e-mail / password through the
+"Manage Accounts" link on Turntable or (2) configure the user's id / auth token
+manually.
+
+If you do not wish to set up an e-mail / password, you can generate your user id
+and auth token via the directions @ http://alaingilbert.github.com/Turntable-API/bookmarklet.html.
+Once generated, you can use them in turntabler like so:
+
+```ruby
+TT.run do
+  client = TT::Client.new(EMAIL, PASSWORD, :user_id => USER_ID, :auth => AUTH)
+  # ...
+end
+```
+
+In this example, `EMAIL` and `PASSWORD` can be any value since they won't need
+to be used to generate the user id / auth token.
 
 ### Shortcuts
 
@@ -207,22 +242,25 @@ TT.run do
 end
 ```
 
+Note, however, that if `TT` is already defined when this library is loaded, then
+the constant won't get redefined.
+
 ### Interactive Console
 
 Typically it's difficult to debug or run simple tests within IRB when using
-EventMachine.  However, turntabler provides a few simple ways to do this so that
-you can play around with the API interactively.
+[EventMachine](http://rubyeventmachine.com/).  However, turntabler provides a
+few simple ways to do this so that you can play around with the API interactively.
 
 For example:
 
 ```ruby
 1.9.3-p286 :001 > require 'turntabler'
 => true
-1.9.3-p286 :002 > TT.interactive
+1.9.3-p286 :002 > Turntabler.interactive
 => true
 1.9.3-p286 :003 > client = nil
 => nil
-1.9.3-p286 :004 > TT.run do
+1.9.3-p286 :004 > Turntabler.run do
 1.9.3-p286 :005 >   client = Turntabler::Client.new(EMAIL, PASSWORD)
 1.9.3-p286 :006 > end
 => nil
@@ -236,7 +274,7 @@ D, [2012-11-20T08:36:08.189158 #21419] DEBUG -- : Message sent: {:api=>"presence
 D, [2012-11-20T08:36:08.266749 #21419] DEBUG -- : Message received: {"msgid"=>3, "success"=>true, ...}
 
 # later on...
-1.9.3-p286 :008 > TT.run { puts client.user.fan_of.inspect }
+1.9.3-p286 :008 > Turntabler.run { puts client.user.fan_of.inspect }
 => nil
 D, [2012-11-20T08:39:41.084693 #21419] DEBUG -- : Message sent: {:api=>"user.get_fan_of", ...}
 D, [2012-11-20T08:39:41.159466 #21419] DEBUG -- : Message received: {"msgid"=>25, "success"=>true, ...}
@@ -245,31 +283,31 @@ D, [2012-11-20T08:39:41.159466 #21419] DEBUG -- : Message received: {"msgid"=>25
 
 In this example, an instance of `Turntabler::Client` is created and tracked in
 the console.  Later on, we can then run a command on that client by evaluating
-it within a `TT.run` block.  Note that additional debugging output is displayed --
-this is for demonstration purposes only and can be turned off simply by changing
-the logging level of `Turntabler.logger`.
+it within a `Turntabler.run` block.  Note that additional debugging output is
+displayed -- this is for demonstration purposes only and can be turned off
+simply by changing the logging level of `Turntabler.logger`.
 
-### DSL usage
+### DSL syntax
 
 turntabler has basic support for a DSL language in order to simplify some of the
 scripts you may be writing.  The DSL is essentially made available by executing
-blocks within the context of a Turntabler::Client.
+blocks within the context of a `Turntabler::Client` instance.
 
 There are two ways to do this:
 
 ```ruby
-# Using the TT.run shortcut:
+# Using the Turntabler.run shortcut:
 
-TT.run(EMAIL, PASSWORD, :room => ROOM) do
+Turntabler.run(EMAIL, PASSWORD, :room => ROOM) do
   room.dj
   on :user_entered do
     # ...
   end
 end
 
-# Using Turntabler::Client:
+# Passing a block into Turntabler::Client:
 
-TT.run do
+Turntabler.run do
   Turntabler::Client.new(EMAIL, PASSWORD, :room => ROOM) do
     room.dj
     on :user_entered do
@@ -279,14 +317,14 @@ TT.run do
 end
 ```
 
-*Note* that you will likely not want to use the first example (using the `TT.run`
-shortcut when running in the context of a web request in a web server, simply
-because it will start a new Fiber.
+*Note* that you will likely not want to use the first example (using the
+`Turntabler.run` shortcut) when running in the context of a web request in a
+web server, simply because it will start a new Fiber.
 
 The equivalent, non-DSL example looks like so:
 
 ```ruby
-TT.run do
+Turntabler.run do
   client = Turntabler::Client.new(EMAIL, PASSWORD, :room => ROOM)
   client.room.dj
   client.on :user_entered do
@@ -296,8 +334,10 @@ end
 ```
 
 Notice that in this example the syntax is essentially the same except that we're
-one level out and need to interact directly with the Turntabler::Client instance
-itself.
+one level out and need to interact directly with the `Turntabler::Client`
+instance itself.
+
+## Usage
 
 ### Web Server Usage
 
@@ -328,14 +368,14 @@ keep attempting to re-open a connection when it's been closed.
 For example:
 
 ```ruby
-TT.run(EMAIL, PASSWORD, :room => ROOM, :reconnect => true, :reconnect_wait => 60) do
+Turntabler.run(EMAIL, PASSWORD, :room => ROOM, :reconnect => true, :reconnect_wait => 60) do
   # ...
 end
 ```
 
 In this example, turntabler will automatically attempt to reconnect if the socket
 is ever closed by reasons other than you closing it yourself.  However, rather
-than constantly trying to hit Turntable's servers you can configuring a reconnect
+than constantly trying to hit Turntable's servers you can configure a reconnect
 wait timeout that will cause turntabler to wait a certain number of seconds before
 attempting to open a connection.  This will continue to happen until the connection
 is successful.  If you were previously in a room, this will also automatically
@@ -355,7 +395,7 @@ bundle exec rspec
 The following caveats should be noted when using turntabler:
 
 * Since this library uses EventMachine / Fibers it will only be compatible with
-  web servers that support those technology.  Examples of such web servers include:
+  web servers that support those technologies.  Examples of such web servers include:
   * [Thin](http://code.macournoyer.com/thin/)
   * [Rainbows](http://rainbows.rubyforge.org/)
   * [Goliath](http://postrank-labs.github.com/goliath/)
@@ -366,7 +406,6 @@ The following caveats should be noted when using turntabler:
 ## Things to do
 
 * Add test coverage
-* Expand on README and examples
 
 ## Contributions
 
