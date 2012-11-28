@@ -183,8 +183,7 @@ document were missing in existing libraries.
 Some of those features include evented I/O, untangled callbacks, object-oriented
 APIs, external API consistency, internal state management, auto lazy-loading, etc.
 This library also strives to be a complete implementation, easy to use / play
-around with, and generally just put together as an organized library instead of
-a script.
+around with, and generally just put together a more organized fashion.
 
 By no means does this discredit the significance of the efforts put forth by the
 authors of these existing libraries -- all of their work provided the foundation
