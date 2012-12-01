@@ -1,5 +1,7 @@
 # master
 
+* Allow title / artist / duration to be explicitly specified in song searches
+
 ## 0.1.1 / 2012-11-27
 
 * Fix gemspec filename

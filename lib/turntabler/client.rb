@@ -401,17 +401,29 @@ module Turntabler
 
     # Finds songs that match the given query.
     # 
-    # @param [String] query The query string to search for
+    # @param [String] query The query string to search for.  This should just be the title of the song if :artist is specified.
     # @param [Hash] options The configuration options for the search
+    # @option options [String] :artist The name of the artist for the song
+    # @option options [Fixnum] :duration The length, in minutes, of the song
     # @option options [Fixnum] :page The page number to get from the results
     # @return [Array<Turntabler::Song>]
     # @raise [ArgumentError] if an invalid option is specified
     # @raise [Turntabler::Error] if the command fails
     # @example
-    #   client.search_song('Like a Rolling Stone')  # => [#<Turntabler::Sticker ...>, ...]
+    #   # Less accurate, general query search
+    #   client.search_song('Like a Rolling Stone by Bob Dylan')             # => [#<Turntabler::Song ...>, ...]
+    #   
+    #   # More accurate, explicit title / artist search
+    #   client.search_song('Like a Rolling Stone', :artist => 'Bob Dylan')  # => [#<Turntabler::Song ...>, ...]
     def search_song(query, options = {})
-      assert_valid_keys(options, :page)
+      assert_valid_keys(options, :artist, :duration, :page)
       options = {:page => 1}.merge(options)
+
+      if artist = options[:artist]
+        query = "title: #{query}"
+        query << " artist: #{artist}"
+      end
+      query << " duration: #{options[:duration]}" if options[:duration]
 
       api('file.search', :query => query, :page => options[:page])
 
