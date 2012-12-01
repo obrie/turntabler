@@ -401,6 +401,7 @@ module Turntabler
 
     # Finds songs that match the given query.
     # 
+    # @note The user must be entered in a room to search for songs
     # @param [String] query The query string to search for.  This should just be the title of the song if :artist is specified.
     # @param [Hash] options The configuration options for the search
     # @option options [String] :artist The name of the artist for the song
@@ -408,7 +409,7 @@ module Turntabler
     # @option options [Fixnum] :page The page number to get from the results
     # @return [Array<Turntabler::Song>]
     # @raise [ArgumentError] if an invalid option is specified
-    # @raise [Turntabler::Error] if the command fails
+    # @raise [Turntabler::Error] if the user is not in a room or the command fails
     # @example
     #   # Less accurate, general query search
     #   client.search_song('Like a Rolling Stone by Bob Dylan')             # => [#<Turntabler::Song ...>, ...]
@@ -418,6 +419,8 @@ module Turntabler
     def search_song(query, options = {})
       assert_valid_keys(options, :artist, :duration, :page)
       options = {:page => 1}.merge(options)
+
+      raise(Turntabler::Error, 'User must be in a room to search for songs') unless room
 
       if artist = options[:artist]
         query = "title: #{query}"
