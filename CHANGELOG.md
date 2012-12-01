@@ -1,5 +1,7 @@
 # master
 
+## 0.1.2 / 2012-12-01
+
 * Fix song searches being allowed when the user isn't in a room
 * Allow title / artist / duration to be explicitly specified in song searches
 
