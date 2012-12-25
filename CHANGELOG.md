@@ -1,5 +1,7 @@
 # master
 
+## 0.1.3 / 2012-12-25
+
 * Fix references from Message#text to Message#content in examples
 
 ## 0.1.2 / 2012-12-01
