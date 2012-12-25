@@ -13,7 +13,7 @@ TT.run(EMAIL, PASSWORD, :room => ROOM) do
   on :user_spoke do |message|
     if is_on
       # The bot is on
-      case message.text
+      case message.content
       when /^\/status$/
         user.say 'The bot is currently turned on.'
       when /^\/off$/
@@ -26,7 +26,7 @@ TT.run(EMAIL, PASSWORD, :room => ROOM) do
       end
     else
       # The bot is off
-      case message.text
+      case message.content
       when /^\/status$/
         user.say 'The bot is currently turned on.'
       when /^\/on$/

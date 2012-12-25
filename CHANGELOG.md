@@ -1,5 +1,7 @@
 # master
 
+* Fix references from Message#text to Message#content in examples
+
 ## 0.1.2 / 2012-12-01
 
 * Fix song searches being allowed when the user isn't in a room

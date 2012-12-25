@@ -103,7 +103,7 @@ Turntabler.run do
   end
 
   client.on :user_spoke do |message|
-    if message.text =~ /bop/
+    if message.content =~ /bop/
       client.room.current_song.vote   # => true
     end
   end

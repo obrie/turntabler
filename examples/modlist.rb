@@ -12,7 +12,7 @@ moderator_ids = ['xxxxxxxxxxxxxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxxxxxxxxxx']
 TT.run(EMAIL, PASSWORD, :room => ROOM) do
   on :user_spoke do |message|
     # Response to "/mod" command
-    if moderator_ids.include?(message.sender.id) && message.text =~ /^\/mod$/
+    if moderator_ids.include?(message.sender.id) && message.content =~ /^\/mod$/
       user.say("Yo #{message.sender.name}, it looks like you are a bot moderator!")
     end
   end

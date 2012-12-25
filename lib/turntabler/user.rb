@@ -133,6 +133,7 @@ module Turntabler
 
     # Sends a private message to this user.
     # 
+    # @param [String] content The text of the message
     # @return [true]
     # @raise [Turntabler::Error] if the command fails
     # @example

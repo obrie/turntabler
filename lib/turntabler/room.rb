@@ -349,14 +349,14 @@ module Turntabler
 
     # Braodcasts a message in the chat.
     # 
-    # @param [String] text The text to send to the chat
+    # @param [String] content The text to send to the chat
     # @return [true]
     # @raise [Turntabler::Error] if the command fails
     # @example
     #   room.say("What's up guys?")   # => true
-    def say(text)
+    def say(content)
       enter
-      api('room.speak', :text => text)
+      api('room.speak', :text => content)
       true
     end
 

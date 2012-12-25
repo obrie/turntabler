@@ -10,7 +10,7 @@ bops_count = 0
 
 TT.run(EMAIL, PASSWORD, :room => ROOM) do
   on :user_spoke do |message|
-    bops_count += 1 if message.text =~ /bop/
+    bops_count += 1 if message.content =~ /bop/
     room.current_song.vote if bops_count == 2
   end
 

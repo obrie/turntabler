@@ -9,7 +9,7 @@ ROOM = ENV['ROOM']          # 'xxxxxxxxxxxxxxxxxxxxxxxx'
 TT.run(EMAIL, PASSWORD, :room => ROOM) do
   on :user_spoke do |message|
     # Respond to "/hello" command
-    if (message.text =~ /^\/hello$/)
+    if (message.content =~ /^\/hello$/)
       client.user.say("Hey! How are you @#{message.sender.name}?")
     end
   end
