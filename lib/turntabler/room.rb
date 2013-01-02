@@ -356,7 +356,7 @@ module Turntabler
     #   room.say("What's up guys?")   # => true
     def say(content)
       enter
-      api('room.speak', :text => content)
+      api('room.speak', :text => content, :roomid => id)
       true
     end
 
