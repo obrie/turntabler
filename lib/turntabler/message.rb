@@ -7,7 +7,7 @@ module Turntabler
   class Message < Resource
     # The user who sent the message
     # @return [Turntabler::User]
-    attribute :sender, :senderid, :userid do |id|
+    attribute :sender, :userid, :senderid do |id|
       room? ? room.build_user(:_id => id) : User.new(client, :_id => id)
     end
 
