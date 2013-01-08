@@ -1,5 +1,6 @@
 # master
 
+* Fix Bop / ChatBot / Switch examples not working
 * Fix Message#sender not set properly on user_spoke events
 * Fix Client#room not being reset when leaving a room
 * Fix roomid / section not being specify consistently in room APIs

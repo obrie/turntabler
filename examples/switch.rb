@@ -15,22 +15,22 @@ TT.run(EMAIL, PASSWORD, :room => ROOM) do
       # The bot is on
       case message.content
       when /^\/status$/
-        user.say 'The bot is currently turned on.'
+        room.say 'The bot is currently turned on.'
       when /^\/off$/
-        user.say 'The bot is now turned off.'
+        room.say 'The bot is now turned off.'
         is_on = false
       when /^\/hello$/
         # Add other logic here for when the bot is turned on. For example:
         # Respond to "/hello" command
-        user.say "Hey! How are you #{message.sender.name}?"
+        room.say "Hey! How are you #{message.sender.name}?"
       end
     else
       # The bot is off
       case message.content
       when /^\/status$/
-        user.say 'The bot is currently turned on.'
+        room.say 'The bot is currently turned off.'
       when /^\/on$/
-        user.say 'The bot is now turned off.'
+        room.say 'The bot is now turned on.'
         is_on = true
       end
 
