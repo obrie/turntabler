@@ -114,6 +114,7 @@ module Turntabler
 
     # A user spoke in the chat room
     handle :user_spoke, :speak do
+      data['senderid'] = data.delete('userid')
       Message.new(client, data)
     end
 
