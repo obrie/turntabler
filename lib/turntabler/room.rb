@@ -160,7 +160,7 @@ module Turntabler
       client = @client.url == url ? @client : Turntabler::Client.new(@client.user.id, @client.user.auth, :url => url, :timeout => @client.timeout)
 
       begin
-        data = client.api('room.info', :roomid => id, :section => section, :extended => options[:song_log])
+        data = api('room.info', :extended => options[:song_log])
         self.attributes = data['room'].merge('users' => data['users'])
         super()
       ensure
@@ -219,7 +219,7 @@ module Turntabler
         client.connect(url)
         begin
           client.room = self
-          data = api('room.register', :roomid => id, :section => nil)
+          data = api('room.register', :section => nil)
           self.attributes = {'section' => data['section']}
         rescue Exception
           client.room = nil
@@ -237,7 +237,7 @@ module Turntabler
     # @example
     #   room.leave    # => true
     def leave
-      api('room.deregister', :roomid => id, :section => section)
+      api('room.deregister')
       true
     end
 
@@ -248,7 +248,7 @@ module Turntabler
     # @example
     #   room.add_as_favorite    # => true
     def add_as_favorite
-      api('room.add_favorite', :roomid => id, :section => section)
+      api('room.add_favorite')
       true
     end
 
@@ -259,7 +259,7 @@ module Turntabler
     # @example
     #   room.remove_as_favorite   # => true
     def remove_as_favorite
-      api('room.rem_favorite', :roomid => id, :section => section)
+      api('room.rem_favorite')
       true
     end
 
@@ -306,7 +306,7 @@ module Turntabler
     #   room.become_dj    # => true
     def become_dj
       enter
-      api('room.add_dj', :roomid => id, :section => section)
+      api('room.add_dj')
       true
     end
 
@@ -368,11 +368,17 @@ module Turntabler
     # @example
     #   room.report('Name abuse ...')   # => true
     def report(reason = '')
-      api('room.report', :roomid => id, :section => section, :reason => reason)
+      api('room.report', :reason => reason)
       true
     end
 
     private
+    def api(command, options = {})
+      options[:roomid] = id unless options.include?(:roomid)
+      options[:section] = section unless options.include?(:section)
+      super
+    end
+
     # Sets the sticker placements for each dj
     def sticker_placements=(user_placements)
       user_placements.each do |user_id, placements|
