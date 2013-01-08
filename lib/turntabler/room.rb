@@ -238,6 +238,7 @@ module Turntabler
     #   room.leave    # => true
     def leave
       api('room.deregister')
+      client.room = nil
       true
     end
 
