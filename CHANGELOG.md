@@ -1,5 +1,7 @@
 # master
 
+## 0.1.4 / 2012-01-08
+
 * Fix Bop / ChatBot / Switch examples not working
 * Fix Message#sender not set properly on user_spoke events
 * Fix Client#room not being reset when leaving a room
