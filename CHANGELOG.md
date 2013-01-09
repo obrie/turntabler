@@ -1,5 +1,7 @@
 # master
 
+* Fix Modlist example not sending messages to the room
+
 ## 0.1.4 / 2012-01-08
 
 * Fix Bop / ChatBot / Switch examples not working
