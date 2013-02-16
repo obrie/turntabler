@@ -116,8 +116,8 @@ module Turntabler
     # @return [true]
     def close(allow_reconnect = false)
       if @connection
-        @update_timer.cancel if @update_timer
-        @update_timer = nil
+        @keepalive_timer.cancel if @keepalive_timer
+        @keepalive_timer = nil
         @connection.close
 
         wait do |&resume|
@@ -485,6 +485,20 @@ module Turntabler
       true
     end
     
+    # Resets the keepalive timer to run at the given interval.
+    # 
+    # @param [Fixnum] interval The frequency with which keepalives get sent (in seconds)
+    # @api private
+    def reset_keepalive(interval = 10)
+      if !@keepalive_timer || @keepalive_interval != interval
+        @keepalive_interval = interval
+
+        # Periodically update the user's status to remain available
+        @keepalive_timer.cancel if @keepalive_timer
+        @keepalive_timer = EM::Synchrony.add_periodic_timer(interval) { user.update(:status => user.status) }
+      end
+    end
+    
     private
     # Callback when a heartbeat message has been received from Turntable determining
     # whether this client is still alive.
@@ -499,10 +513,7 @@ module Turntabler
       user.authenticate
       user.fan_of
       user.update(:status => user.status)
-      
-      # Periodically update the user's status to remain available
-      @update_timer.cancel if @update_timer
-      @update_timer = EM::Synchrony.add_periodic_timer(10) { user.update(:status => user.status) }
+      reset_keepalive
     end
     
     # Callback when the session has ended.  This will automatically reconnect if

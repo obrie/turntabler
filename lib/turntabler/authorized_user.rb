@@ -249,8 +249,10 @@ module Turntabler
     def update_status(status = self.status)
       assert_valid_values(status, *%w(available unavailable away))
 
-      api('presence.update', :status => status)
+      result = api('presence.update', :status => status)
+      client.reset_keepalive(result['interval']) if result['interval']
       self.attributes = {'status' => status}
+
       true
     end
   end

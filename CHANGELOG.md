@@ -1,5 +1,6 @@
 # master
 
+* Respect the keepalive update interval from API responses
 * Add official support for trigger custom events
 * Rename RoomDirectory#list to RoomDirectory#all
 * Add full support for playlists API
