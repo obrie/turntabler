@@ -99,7 +99,7 @@ module Turntabler
 
         # Create a new connection to the given url
         @connection = Connection.new(url, :timeout => timeout, :params => {:clientid => id, :userid => user.id, :userauth => user.auth})
-        @connection.handler = lambda {|data| on_message(data)}
+        @connection.handler = lambda {|data| trigger(data.delete('command'), data)}
         @connection.start
 
         # Wait until the connection is authenticated
@@ -439,21 +439,50 @@ module Turntabler
       songs || raise(Error, 'Search failed to complete')
     end
 
-    # Callback when a message has been received from Turntable.  This will run
-    # any handlers registered for the event associated with the message.
+    # Triggers callback handlers for the given Turntable command.  This should
+    # either be invoked when responses are received for Turntable or when
+    # triggering custom events.
     # 
-    # @api private
-    # @param [Hash<String, Object>] data The message data received
-    # @return nil
-    def on_message(data)
-      if Event.command?(data['command'])
-        event = Event.new(self, data)
+    # @note If the command is unknown, it will simply get skipped and not raise an exception
+    # @param [Symbol] command The name of the command triggered.  This is typically the same name as the event.
+    # @param [Array] args The arguments to be processed by the event
+    # @return [true]
+    # 
+    # == Triggering custom events
+    # 
+    # After defining custom events, `trigger` can be used to invoke any handler
+    # that's been registered for that event.  The argument list passed into
+    # `trigger` will be passed, exactly as specified, to the registered
+    # handlers.
+    # 
+    # @example
+    #   # Define names of events
+    #   Turntabler.events(:no_args, :one_arg, :multiple_args)
+    #   
+    #   # ...
+    #   
+    #   # Register handlers
+    #   client.on(:no_args) { }
+    #   client.on(:one_arg) {|arg| }
+    #   client.on(:multiple_args) {|arg1, arg2| }
+    #   
+    #   # Trigger handlers registered for events
+    #   client.trigger(:no_args)              # => true
+    #   client.trigger(:one_arg, 1)           # => true
+    #   client.trigger(:multiple_args, 1, 2)  # => true
+    def trigger(command, *args)
+      command = command.to_sym if command
+
+      if Event.command?(command)
+        event = Event.new(self, command, args)
         handlers = @event_handlers[event.name] || []
         handlers.each do |handler|
           success = handler.run(event)
           handlers.delete(handler) if success && handler.once
         end
       end
+
+      true
     end
     
     private
@@ -488,7 +517,7 @@ module Turntabler
       if @reconnect && allow_reconnect
         EM::Synchrony.add_timer(@reconnect_wait) do
           room ? room.enter : connect(url)
-          on_message('command' => 'reconnected')
+          trigger(:reconnected)
         end
       end
     end

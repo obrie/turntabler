@@ -50,6 +50,7 @@ At a high level, this project features:
 * HTTP / Web Socket interface implementations
 * Room state / user list management
 * DSL syntax support
+* Custom events
 
 Turntable features include management of:
 
@@ -177,6 +178,43 @@ can do with turntabler.  For a *complete* list, see the API documentation, espec
 
 For additional examples, see the [examples](https://github.com/obrie/turntabler/tree/master/examples)
 directory in the repository.
+
+### Custom events
+
+In addition to the default Turntable events supported out of the box, turntabler
+also allows you to define your own events.  This is particularly useful in cases
+where you may want to provide extensions on top of the turntabler library for
+others to use.  These extensions may be higher-order events, such as a user
+reaching their maximum play count for a turn or a user timing out.
+
+For example:
+
+```ruby
+require 'turntabler'
+
+EMAIL = ENV['EMAIL']
+PASSWORD = ENV['PASSWORD']
+
+# Register custom events
+Turntabler.events :user_greeted
+
+Turntabler.run do
+  client = Turntabler::Client.new(EMAIL, PASSWORD)
+  
+  # Events
+  client.on :user_spoke do |message|
+    if (message.content =~ /^\/hello$/)
+      # Trigger the custom event
+      client.trigger(:user_greeted, message.sender)
+    end
+  end
+
+  # Handle custom event
+  client.on :user_greeted do |user|
+    client.room.say "Hey! How are you #{message.sender.name}?"
+  end
+end
+```
 
 ## Additional Topics
 
@@ -339,7 +377,7 @@ Notice that in this example the syntax is essentially the same except that we're
 one level out and need to interact directly with the `Turntabler::Client`
 instance itself.
 
-## Usage
+## Deployment
 
 ### Web Server Usage
 

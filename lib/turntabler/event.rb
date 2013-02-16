@@ -35,7 +35,7 @@ module Turntabler
       # @param [String] command The command to check for the existence of
       # @return [Boolean] +true+ if the command exists, otherwise +false+
       def command?(command)
-        command && commands.include?(command.to_sym)
+        commands.include?(command)
       end
     end
 
@@ -79,7 +79,7 @@ module Turntabler
       data['user'].map do |attrs|
         user = room.build_user(attrs)
         room.listeners << user
-        user
+        [user]
       end
     end
 
@@ -88,7 +88,7 @@ module Turntabler
       data['user'].map do |attrs|
         user = room.build_user(attrs)
         room.listeners.delete(user)
-        user
+        [user]
       end
     end
 
@@ -122,7 +122,8 @@ module Turntabler
     handle :dj_added, :add_dj do
       new_djs = []
       data['user'].each_with_index do |attrs, index|
-        new_djs << user = room.build_user(attrs.merge('placements' => data['placements'][index]))
+        user = room.build_user(attrs.merge('placements' => data['placements'][index]))
+        new_djs << [user]
         room.djs << user
       end
       new_djs
@@ -133,7 +134,7 @@ module Turntabler
       data['user'].map do |attrs|
         user = room.build_user(attrs)
         room.djs.delete(user)
-        user
+        [user]
       end
     end
 
@@ -153,14 +154,14 @@ module Turntabler
 
     # There are no more songs to play in the room
     handle :song_unavailable, :nosong do
-      client.on_message('command' => 'song_ended') if room.current_song
+      client.trigger(:song_ended) if room.current_song
       room.attributes = data['room'].merge('current_song' => nil)
       nil
     end
 
     # A new song has started playing
     handle :song_started, :newsong do
-      client.on_message('command' => 'song_ended') if room.current_song
+      client.trigger(:song_ended) if room.current_song
       room.attributes = data['room']
       room.current_song
     end
@@ -190,13 +191,13 @@ module Turntabler
 
     # A song was skipped due to a copyright claim
     handle :song_blocked do
-      client.on_message('command' => 'song_ended') if room.current_song
+      client.trigger(:song_ended) if room.current_song
       Song.new(client, data)
     end
 
     # A song was skipped due to a limit on # of plays per hour
     handle :song_limited, :dmca_error do
-      client.on_message('command' => 'song_ended') if room.current_song
+      client.trigger(:song_ended) if room.current_song
       Song.new(client, data)
     end
 
@@ -207,7 +208,7 @@ module Turntabler
 
     # A song search has completed and the results are available
     handle :search_completed, :search_complete do
-      [data['docs'].map {|attrs| Song.new(client, attrs)}]
+      [[data['docs'].map {|attrs| Song.new(client, attrs)}]]
     end
 
     # A song search failed to complete
@@ -217,25 +218,29 @@ module Turntabler
     # @return [String]
     attr_reader :name
 
+    # The raw arguments list from the event
+    # @return [Array<Object>]
+    attr_reader :args
+
     # The raw hash of data parsed from the event
     # @return [Hash<String, Object>]
     attr_reader :data
 
-    # The typecasted results parsed from the data
-    # @return [Array]
+    # The typecasted results args parsed from the event
+    # @return [Array<Array<Object>>]
     attr_reader :results
 
     # Creates a new event triggered with the given data
     # 
     # @param [Turntabler::Client] client The client that this event is bound to
     # @param [Hash] data The response data from Turntable
-    def initialize(client, data)
+    def initialize(client, command, args)
       @client = client
-      @data = data
-      command = data['command'].to_sym
+      @args = args
+      @data = args[0]
       @name = self.class.commands[command]
       @results = __send__("typecast_#{command}_event")
-      @results = [@results] unless @results.is_a?(Array)
+      @results = [[@results].compact] unless @results.is_a?(Array)
     end
 
     private

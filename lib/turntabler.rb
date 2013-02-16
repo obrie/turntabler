@@ -4,6 +4,7 @@ require 'em-synchrony'
 # Turntable.FM API for Ruby
 module Turntabler
   autoload :Client, 'turntabler/client'
+  autoload :Event, 'turntabler/event'
 
   class << self
     # The logger to use for all Turntable messages.  By default, everything is
@@ -95,6 +96,25 @@ module Turntabler
         end
       else
         EM.synchrony { run(*args, &block) }
+      end
+    end
+
+    # Defines one or more custom events for which handlers can be registered
+    # and triggered via Turntabler::Client#on and Turntabler::Client#trigger,
+    # respectively.
+    # 
+    # @note Events must be defined before handlers can be registered for them
+    # @param [Array<String>] names The names of the events to define
+    # @raise [ArgumentError] if the event has already been defined
+    # @example
+    #   Turntabler::Client.events :custom_event1, :custom_event2
+    def events(*names)
+      names.each do |name|
+        if Event.command?(name)
+          raise ArgumentError, "Event :#{name} is already defined"
+        else
+          Event.handle(name) { [args] }
+        end
       end
     end
   end

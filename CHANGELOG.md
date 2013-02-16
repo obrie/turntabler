@@ -1,5 +1,6 @@
 # master
 
+* Add official support for trigger custom events
 * Rename RoomDirectory#list to RoomDirectory#all
 * Add full support for playlists API
 * Fix Modlist example not sending messages to the room

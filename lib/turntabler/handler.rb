@@ -46,9 +46,9 @@ module Turntabler
     def run(event)
       if conditions_match?(event.data)
         # Run the block for each individual result
-        event.results.each do |result|
+        event.results.each do |args|
           begin
-            @block.call(*[result].compact)
+            @block.call(*args)
           rescue StandardError => ex
             logger.error(([ex.message] + ex.backtrace) * "\n")
           end
