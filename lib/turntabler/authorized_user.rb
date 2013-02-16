@@ -1,4 +1,4 @@
-require 'turntabler/playlist'
+require 'turntabler/playlist_directory'
 require 'turntabler/preferences'
 require 'turntabler/user'
 require 'turntabler/sticker_placement'
@@ -32,6 +32,10 @@ module Turntabler
     # @return [String]
     attribute :password
 
+    # The user's custom playlists
+    # @return [Turntabler::PlaylistDirectory]
+    attr_reader :playlists
+
     # The user's current Turntable preferences
     # @return [Turntabler::Preferences]
     attr_reader :preferences
@@ -39,7 +43,7 @@ module Turntabler
     # @api private
     def initialize(client, *)
       @status = 'available'
-      @playlists = {}
+      @playlists = PlaylistDirectory.new(client)
       @preferences = Preferences.new(client)
       super
     end
@@ -192,7 +196,7 @@ module Turntabler
     #   user.playlist             # => #<Turntabler::Playlist id="default" ...>
     #   user.playlist("rock")     # => #<Turntabler::Playlist id="rock" ...>
     def playlist(id = 'default')
-      @playlists[id] ||= Playlist.new(client, :_id => id)
+      playlists.build(:_id => id)
     end
 
     # Gets the stickers that have been purchased by this user.

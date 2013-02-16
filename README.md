@@ -117,40 +117,47 @@ Turntabler.run do
   end
 
   # Authorized user interactions
-  user = client.user                                # => #<Turntabler::AuthorizedUser:0x95631b0 @email="ben.zelano@gmail.com" ...>
-  user.fan_of                                       # => [#<Turntabler::User:0x95ccb38 @id="d5616b31654e8b22a7a1eef0">, ...]
-  user.fans                                         # => [#<Turntabler::User:0x95dd1cc @id="d5616b31654e8b22a7a1eef0">, ...]
-  user.playlist.songs                               # => [#<Turntabler::Song:0x9610b44 @album="Abbey Road" ...>, ...]
-  user.blocks                                       # => [#<Turntabler::User:0x9792724 @id="19125d4da3b09562b2cf68b6">, ...]
-  user.buddies                                      # => [#<Turntabler::User:0x9792580 @id="efff38aeb7b9334164c1b630">, ...]
+  user = client.user                                # => #<Turntabler::AuthorizedUser @email="ben.zelano@gmail.com" ...>
+  user.fan_of                                       # => [#<Turntabler::User @id="d5616b31654e8b22a7a1eef0">, ...]
+  user.fans                                         # => [#<Turntabler::User @id="d5616b31654e8b22a7a1eef0">, ...]
+  user.playlist.songs                               # => [#<Turntabler::Song @album="Abbey Road" ...>, ...]
+  user.blocks                                       # => [#<Turntabler::User @id="19125d4da3b09562b2cf68b6">, ...]
+  user.buddies                                      # => [#<Turntabler::User @id="efff38aeb7b9334164c1b630">, ...]
   
   # Room Directory
-  client.rooms.list(:favorites => true)             # => []
-  client.rooms.list(:genre => :rock)                # => [#<Turntabler::Room:0x985d474 @id="4e4986bb14169c5f241318a6", ...>, ...]
-  client.rooms.list(:genre => :rock, :available_djs => true, :minimum_listeners => 5)
-  # => [#<Turntabler::Room:0x91c1d04 @id="4f4a5874a3f75128aa006c17", ...>, ...]
-  client.rooms.with_friends                         # => [#<Turntabler::Room:0x9674c98 @id="50b4c1e2df5bcf4af666f876", ...>, ...]
-  client.room('4dff1eac14169c565800892e').listeners # => #<Set: {#<Turntabler::User:0x96340bc @id="4e1341e2a3f75114d003c591" ...>, ...}>
+  client.rooms.all(:favorites => true)              # => []
+  client.rooms.all(:genre => :rock)                 # => [#<Turntabler::Room @id="4e4986bb14169c5f241318a6", ...>, ...]
+  client.rooms.all(:genre => :rock, :available_djs => true, :minimum_listeners => 5)
+  # => [#<Turntabler::Room @id="4f4a5874a3f75128aa006c17", ...>, ...]
+  client.rooms.with_friends                         # => [#<Turntabler::Room @id="50b4c1e2df5bcf4af666f876", ...>, ...]
+  client.room('4dff1eac14169c565800892e').listeners # => #<Set: {#<Turntabler::User @id="4e1341e2a3f75114d003c591" ...>, ...}>
   
   # Room interaction
   client.rooms.create("My Test Room #{rand}").enter # => true
-  room = client.room                                # => #<Turntabler::Room:0x99a16dc @name="My Test Room 0.24300857307298018" ...>
+  room = client.room                                # => #<Turntabler::Room @name="My Test Room 0.24300857307298018" ...>
   room.add_as_favorite                              # => true
   room.become_dj                                    # => true
   room.say "Hey guys!"                              # => true
   
   # User interaction
-  listeners = room.listeners                        # => #<Set: {#<Turntabler::User:0x95631b0 @id="309ba75b6385b83e110923bd" ..., ...}>
+  listeners = room.listeners                        # => #<Set: {#<Turntabler::User @id="309ba75b6385b83e110923bd" ..., ...}>
   listeners.each do |listener|
-    listener.messages                               # => [#<Turntabler::Message:0x99aa1ec @content="Hey man!" ...>, ...]
+    listener.messages                               # => [#<Turntabler::Message @content="Hey man!" ...>, ...]
     listener.website                                # => "http://mypersonalwebsite.com"
     listener.facebook_url                           # => "https://www.facebook.com/firstname.lastname"
-    listener.sticker_placements                     # => [#<Turntabler::StickerPlacement:0x9861024 @angle=0 ...>, ...]
+    listener.sticker_placements                     # => [#<Turntabler::StickerPlacement @angle=0 ...>, ...]
     listener.say "Welcome to the room!"             # => true
   end
   
+  # Playlist interaction
+  client.user.playlists.all                         # => [#<Turntabler::Playlist @id="default" ...>, ...]
+  client.user.playlists.create("rock")              # => #<Turntabler::Playlist @id="rock" ...>
+  client.user.playlist                              # => #<Turntabler::Playlist @id="default" ...>
+  client.user.playlist("rock").activate             # => true
+  client.user.playlist("rock").songs                # => []
+  
   # Songs
-  songs = client.search_song('Rolling Stones')      # => [#<Turntabler::Song:0x983c198 @album="Tattoo You (2009 Remaster)" ...>, ...]
+  songs = client.search_song('Rolling Stones')      # => [#<Turntabler::Song @album="Tattoo You (2009 Remaster)" ...>, ...]
   songs.each do
     song.enqueue                                    # => true
   end

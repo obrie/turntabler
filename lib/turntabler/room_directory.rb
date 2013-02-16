@@ -54,11 +54,11 @@ module Turntabler
     # @raise [ArgumentError] if an invalid option or value is specified
     # @raise [Turntabler::Error] if the command fails
     # @example
-    #   rooms.list                                          # => [#<Turntabler::Room ...>, ...]
-    #   rooms.list(:favorites => true)                      # => [#<Turntabler::Room ...>, ...]
-    #   rooms.list(:available_djs => true, :genre => :rock) # => [#<Turntabler::Room ...>, ...]
-    #   rooms.list(:sort => :random)                        # => [#<Turntabler::Room ...>, ...]
-    def list(options = {})
+    #   rooms.all                                           # => [#<Turntabler::Room ...>, ...]
+    #   rooms.all(:favorites => true)                       # => [#<Turntabler::Room ...>, ...]
+    #   rooms.all(:available_djs => true, :genre => :rock)  # => [#<Turntabler::Room ...>, ...]
+    #   rooms.all(:sort => :random)                         # => [#<Turntabler::Room ...>, ...]
+    def all(options = {})
       assert_valid_keys(options, :limit, :skip, :favorites, :available_djs, :genre, :minimum_listeners, :sort)
       assert_valid_values(options[:genre], :rock, :electronic, :indie, :hiphop, :pop, :dubstep) if options[:genre]
       assert_valid_values(options[:sort], :created, :listeners, :random) if options[:sort]
