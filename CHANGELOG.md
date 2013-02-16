@@ -1,5 +1,7 @@
 # master
 
+## 0.2.0 / 2013-02-16
+
 * Respect the keepalive update interval from API responses
 * Add official support for trigger custom events
 * Rename RoomDirectory#list to RoomDirectory#all
