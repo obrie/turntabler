@@ -71,6 +71,7 @@ module Turntabler
       # Setup default event handlers
       on(:heartbeat) { on_heartbeat }
       on(:session_missing) { on_session_missing }
+      on(:session_ended) { on_session_ended }
 
       # Connect to an initial room / server
       if room_name = options[:room]
@@ -88,7 +89,7 @@ module Turntabler
     # this will also attempt to authenticate the user.
     # 
     # @api private
-    # @note This wil only open a new connection if the client isn't already connected to the given url
+    # @note This will only open a new connection if the client isn't already connected to the given url
     # @param [String] url The url to open a connection to
     # @return [true]
     # @raise [Turntabler::Error] if the connection cannot be opened
@@ -116,15 +117,20 @@ module Turntabler
     # @return [true]
     def close(allow_reconnect = false)
       if @connection
+        # Disable reconnects if specified
+        reconnect = @reconnect
+        @reconnect = reconnect && allow_reconnect
+
+        # Clean up timers / connections
         @keepalive_timer.cancel if @keepalive_timer
         @keepalive_timer = nil
         @connection.close
 
+        # Revert change to reconnect config once the final signal is received
         wait do |&resume|
           on(:session_ended, :once => true) { resume.call }
         end
-
-        on_session_ended(allow_reconnect)
+        @reconnect = reconnect
       end
       
       true
@@ -495,7 +501,9 @@ module Turntabler
 
         # Periodically update the user's status to remain available
         @keepalive_timer.cancel if @keepalive_timer
-        @keepalive_timer = EM::Synchrony.add_periodic_timer(interval) { user.update(:status => user.status) }
+        @keepalive_timer = EM::Synchrony.add_periodic_timer(interval) do
+          Turntabler.run { user.update(:status => user.status) }
+        end
       end
     end
     
@@ -518,17 +526,24 @@ module Turntabler
     
     # Callback when the session has ended.  This will automatically reconnect if
     # allowed to do so.
-    def on_session_ended(allow_reconnect)
+    def on_session_ended
       url = @connection.url
       room = @room
       @connection = nil
       @room = nil
 
       # Automatically reconnect to the room / server if allowed
-      if @reconnect && allow_reconnect
+      if @reconnect
         EM::Synchrony.add_timer(@reconnect_wait) do
-          room ? room.enter : connect(url)
-          trigger(:reconnected)
+          logger.debug 'Attempting to reconnect'
+
+          begin
+            room ? room.enter : connect(url)
+            trigger(:reconnected)
+          rescue Exception => ex
+            logger.debug "Socket closed: #{ex.message}"
+            on_session_ended
+          end
         end
       end
     end

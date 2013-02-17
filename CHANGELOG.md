@@ -1,5 +1,9 @@
 # master
 
+* Fix exceptions in reconnects causing the reconnect process to halt retrying
+* Fix reconnects not occurring when socket is closed without a killdashnine event from Turntable
+* Fix exceptions in keepalive timer causing the EM reactor to be shut down
+
 ## 0.2.0 / 2013-02-16
 
 * Respect the keepalive update interval from API responses
