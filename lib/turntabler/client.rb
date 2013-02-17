@@ -74,12 +74,14 @@ module Turntabler
       on(:session_ended) { on_session_ended }
 
       # Connect to an initial room / server
-      if room_name = options[:room]
-        room(room_name).enter
-      elsif url = options[:url]
-        connect(url)
-      else
-        connect
+      reconnect_from(ConnectionError, APIError) do
+        if room_name = options[:room]
+          room(room_name).enter
+        elsif url = options[:url]
+          connect(url)
+        else
+          connect
+        end
       end
 
       instance_eval(&block) if block_given?
@@ -152,7 +154,7 @@ module Turntabler
     # @return [Hash] The data returned from the Turntable service
     # @raise [Turntabler::Error] if the connection is not open or the command fails to execute
     def api(command, params = {})
-      raise(Turntabler::Error, 'Connection is not open') unless @connection && @connection.connected?
+      raise(ConnectionError, 'Connection is not open') unless @connection && @connection.connected?
       
       message_id = @connection.publish(params.merge(:api => command))
 
@@ -165,7 +167,7 @@ module Turntabler
         data
       else
         error = data['error'] || data['err']
-        raise Error, "Command \"#{command}\" failed with message: \"#{error}\""
+        raise APIError, "Command \"#{command}\" failed with message: \"#{error}\""
       end
     end
 
@@ -426,7 +428,7 @@ module Turntabler
       assert_valid_keys(options, :artist, :duration, :page)
       options = {:page => 1}.merge(options)
 
-      raise(Turntabler::Error, 'User must be in a room to search for songs') unless room
+      raise(APIError, 'User must be in a room to search for songs') unless room
 
       if artist = options[:artist]
         query = "title: #{query}"
@@ -442,7 +444,7 @@ module Turntabler
         on(:search_failed, :once => true, :if => {'query' => query}) { resume.call }
       end
 
-      songs || raise(Error, 'Search failed to complete')
+      songs || raise(APIError, 'Search failed to complete')
     end
 
     # Triggers callback handlers for the given Turntable command.  This should
@@ -534,16 +536,27 @@ module Turntabler
 
       # Automatically reconnect to the room / server if allowed
       if @reconnect
-        EM::Synchrony.add_timer(@reconnect_wait) do
+        reconnect_from(Exception) do
+          room ? room.enter : connect(url)
+          trigger(:reconnected)
+        end
+      end
+    end
+    
+    # Runs a given block and retries that block after a certain period of time
+    # if any of the specified exceptions are raised.  Note that there is no
+    # limit on the number of attempts to retry.
+    def reconnect_from(*exceptions)
+      begin
+        yield
+      rescue *exceptions => ex
+        if @reconnect
+          logger.debug "Connection failed: #{ex.message}"
+          EM::Synchrony.sleep(@reconnect_wait)
           logger.debug 'Attempting to reconnect'
-
-          begin
-            room ? room.enter : connect(url)
-            trigger(:reconnected)
-          rescue Exception => ex
-            logger.debug "Socket closed: #{ex.message}"
-            on_session_ended
-          end
+          retry
+        else
+          raise
         end
       end
     end

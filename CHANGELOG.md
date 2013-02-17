@@ -1,5 +1,6 @@
 # master
 
+* Fix exceptions on initial connection not causing reconnection process to kick in
 * Fix exceptions in reconnects causing the reconnect process to halt retrying
 * Fix reconnects not occurring when socket is closed without a killdashnine event from Turntable
 * Fix exceptions in keepalive timer causing the EM reactor to be shut down

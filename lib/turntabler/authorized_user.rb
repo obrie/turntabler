@@ -77,9 +77,10 @@ module Turntabler
     # @raise [Turntabler::Error] if the command fails
     def login
       response = EventMachine::HttpRequest.new('https://turntable.fm/api/user.email_login').get(:query => {:email => email, :password => password, :client => client.id}).response
-      data = JSON.parse(response)
-      raise(Error, data[1]['err']) unless data[0]
-      self.attributes = data[1]
+      success, data = response.empty? ? [nil, {}] : JSON.parse(response)
+      raise(ConnectionError, data['err']) unless success
+
+      self.attributes = data
       true
     end
 

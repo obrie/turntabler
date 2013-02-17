@@ -128,7 +128,10 @@ module Turntabler
     def host
       begin
         response = EventMachine::HttpRequest.new("http://turntable.fm/api/room.which_chatserver?roomid=#{id}").get.response
-        self.attributes = JSON.parse(response)[1]
+        success, data = response.empty? ? [nil, {}] : JSON.parse(response)
+        raise(ConnectionError, data['err']) unless success
+
+        self.attributes = data
       end unless @host
       @host
     end

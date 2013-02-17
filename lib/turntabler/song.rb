@@ -1,4 +1,3 @@
-require 'turntabler/error'
 require 'turntabler/resource'
 require 'turntabler/user'
 require 'turntabler/vote'
@@ -232,7 +231,7 @@ module Turntabler
     # Asserts that this is the song currently being played in the room the user
     # is in.  Raises Turntabler::Error if this is not the case.
     def assert_current_song
-      raise(Turntabler::Error, "Song \"#{id}\" is not currently playing") unless room.current_song == self
+      raise(APIError, "Song \"#{id}\" is not currently playing") unless room.current_song == self
     end
     
     # Gets the index of this song within the given playlist.  Raises Turntabler::Error
@@ -240,7 +239,7 @@ module Turntabler
     def index(playlist_id)
       playlist = client.user.playlist(playlist_id)
       index = playlist.songs.index(self)
-      raise(Turntabler::Error, "Song \"#{id}\" is not in playlist \"#{playlist.id}\"") unless index
+      raise(APIError, "Song \"#{id}\" is not in playlist \"#{playlist.id}\"") unless index
       return playlist, index
     end
   end

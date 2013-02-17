@@ -1,6 +1,7 @@
 require 'pp'
 require 'turntabler/assertions'
 require 'turntabler/digest_helpers'
+require 'turntabler/error'
 
 module Turntabler
   # Represents an object that's been created using content from Turntable. This
@@ -185,7 +186,7 @@ module Turntabler
 
     # Gets the current room the user is in
     def room
-      client.room || raise(Turntabler::Error, 'User is not currently in a room')
+      client.room || raise(APIError, 'User is not currently in a room')
     end
     
     # Determines whether the user is currently in a room
