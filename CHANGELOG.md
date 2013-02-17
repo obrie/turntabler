@@ -1,5 +1,7 @@
 # master
 
+## 0.2.1 / 2013-02-16
+
 * Fix exceptions on initial connection not causing reconnection process to kick in
 * Fix exceptions in reconnects causing the reconnect process to halt retrying
 * Fix reconnects not occurring when socket is closed without a killdashnine event from Turntable
