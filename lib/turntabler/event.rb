@@ -233,7 +233,8 @@ module Turntabler
     # Creates a new event triggered with the given data
     # 
     # @param [Turntabler::Client] client The client that this event is bound to
-    # @param [Hash] data The response data from Turntable
+    # @param [Symbol] command The name of the command that fired the event
+    # @param [Array] args The raw argument data from the event
     def initialize(client, command, args)
       @client = client
       @args = args
