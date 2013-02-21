@@ -68,7 +68,8 @@ module Turntabler
 
     # The placements of stickers on the user's laptop
     # @return [Array<Turntabler::StickerPlacement>]
-    attribute :sticker_placements, :placements do |placements|
+    attribute :sticker_placements, :sticker_placements, :placements do |placements|
+      placements = placements.keys if placements.is_a?(Hash)
       placements.map {|attrs| StickerPlacement.new(client, attrs)}
     end
 

@@ -120,13 +120,9 @@ module Turntabler
 
     # A new dj was added to the room
     handle :dj_added, :add_dj do
-      new_djs = []
-      data['user'].each_with_index do |attrs, index|
-        user = room.build_user(attrs.merge('placements' => data['placements'][index]))
-        new_djs << [user]
-        room.djs << user
-      end
-      new_djs
+      user = room.build_user(data['user'][0].merge('placements' => data['placements']))
+      room.djs << user
+      user
     end
 
     # A dj was removed from the room
