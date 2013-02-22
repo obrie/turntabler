@@ -250,8 +250,11 @@ module Turntabler
     def update_status(status = self.status)
       assert_valid_values(status, *%w(available unavailable away))
 
+      now = Time.now.to_i
       result = api('presence.update', :status => status)
-      client.reset_keepalive(result['interval']) if result['interval']
+
+      client.reset_keepalive(result['interval'])
+      client.clock_delta = ((now + Time.now.to_i) / 2 - result['now']).round
       self.attributes = {'status' => status}
 
       true

@@ -49,6 +49,10 @@ module Turntabler
     # @return [String]
     attribute :source_id, :sourceid
     
+    # The time at which the song was started
+    # @return [Time]
+    attribute :started_at, :starttime
+
     # The number of up votes this song has received.
     # @note This is only available for the current song playing in a room
     # @return [Fixnum]
@@ -90,6 +94,24 @@ module Turntabler
       @votes = []
       @score = 0
       super
+    end
+
+    # The time at which this song will end playing.
+    # 
+    # @return [Time]
+    # @example
+    #   song.ends_at  # => 2013-01-05 12:14:25 -0500
+    def ends_at
+      started_at + client.clock_delta + length if started_at
+    end
+
+    # The number of seconds remaining to play in the song
+    # 
+    # @return [Fixnum]
+    # @example
+    #   song.seconds_remaining  # => 12
+    def seconds_remaining
+      ends_at ? (ends_at - started_at).round : 0
     end
 
     # Loads the attributes for this song.  Attributes will automatically load

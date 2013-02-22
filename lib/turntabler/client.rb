@@ -36,6 +36,10 @@ module Turntabler
     # @return [Fixnum]
     attr_reader :timeout
     
+    # The difference of time (in seconds) between this client and Turntable servers
+    # @return [Fixnum]
+    attr_accessor :clock_delta
+
     # Creates a new client for communicating with Turntable.fm with the given
     # email / password.
     # 
@@ -67,6 +71,7 @@ module Turntabler
       @timeout = options[:timeout]
       @reconnect = options[:reconnect]
       @reconnect_wait = options[:reconnect_wait]
+      @clock_delta = 0
 
       # Setup default event handlers
       on(:heartbeat) { on_heartbeat }
