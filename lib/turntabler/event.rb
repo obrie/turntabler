@@ -140,21 +140,35 @@ module Turntabler
     # A fan has been removed by a user in the room
     handle :fan_removed
 
-    # A new dj was added to the booth
+    # A new dj was added to the stage
     handle :dj_added, :add_dj do
       user = room.build_user(data['user'][0].merge('placements' => data['placements']))
       room.djs << user
       user
     end
 
-    # A dj was removed from the booth
+    # A dj was removed from the stage
     handle :dj_removed, :rem_dj do
-      data['user'].map do |attrs|
-        user = room.build_user(attrs)
-        room.djs.delete(user)
-        [user]
+      user = room.build_user(data['user'][0])
+      room.djs.delete(user)
+
+      if moderator_id = data['modid']
+        if moderator_id == 1
+          client.trigger(:dj_booed_off, user)
+        else
+          moderator = room.build_user(:_id => data['user'][0])
+          client.trigger(:dj_escorted_off, user, moderator)
+        end
       end
+
+      [user]
     end
+
+    # A dj was escorted off the stage by a moderator
+    handle :dj_escorted_off
+
+    # A dj was booed off the stage
+    handle :dj_booed_off
 
     # A new moderator was added to the room
     handle :moderator_added, :new_moderator do

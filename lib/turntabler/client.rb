@@ -252,20 +252,22 @@ module Turntabler
     # * +:fan_removed+ - A fan was removed from a user in the room
     # 
     # @example
-    #   client.on :fan_added do |user, fan_of| # User
+    #   client.on :fan_added do |user, fan_of| # User, User
     #     puts user.id
     #     # ...
     #   end
     #   
-    #   client.on :fan_removed do |user, count| # User
+    #   client.on :fan_removed do |user, count| # User, Fixnum
     #     puts user.id
     #     # ...
     #   end
     # 
     # == DJ Events
     # 
-    # * +:dj_added+ - A new DJ was added to the booth
-    # * +:dj_removed+ - A DJ was removed from the booth
+    # * +:dj_added+ - A new DJ was added to the stage
+    # * +:dj_removed+ - A DJ was removed from the stage
+    # * +:dj_escorted_off+ - A DJ was escorted off the stage by a moderator
+    # * +:dj_booed_off+ - A DJ was booed off the stage
     # 
     # @example
     #   client.on :dj_added do |user| # User
@@ -274,6 +276,16 @@ module Turntabler
     #   end
     #   
     #   client.on :dj_removed do |user| # User
+    #     puts user.id
+    #     # ...
+    #   end
+    #   
+    #   client.on :dj_escorted_off do |user, moderator| # User, User
+    #     puts user.id
+    #     # ...
+    #   end
+    #   
+    #   client.on :dj_booed_off do |user| # User
     #     puts user.id
     #     # ...
     #   end
