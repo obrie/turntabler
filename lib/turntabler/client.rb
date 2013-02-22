@@ -204,7 +204,9 @@ module Turntabler
     # * +:user_entered+ - A user entered the room
     # * +:user_left+ - A user left the room
     # * +:user_booted+ - A user has been booted from the room
-    # * +:user_updated+ - A user's name / profile was updated
+    # * +:user_updated+ - A user's profile was updated
+    # * +:user_name_updated+ - A user's name was updated
+    # * +:user_avatar_updated+ - A user's avatar was updated
     # * +:user_spoke+ - A user spoke in the chat room
     # 
     # @example
@@ -225,7 +227,17 @@ module Turntabler
     #   end
     #   
     #   client.on :user_updated do |user| # User
-    #     puts user.laptop_name
+    #     puts user.name
+    #     # ...
+    #   end
+    #   
+    #   client.on :user_name_updated do |user| # User
+    #     puts user.name
+    #     # ...
+    #   end
+    #   
+    #   client.on :user_avatar_updated do |user| # User
+    #     puts user.avatar.id
     #     # ...
     #   end
     #   
@@ -234,6 +246,22 @@ module Turntabler
     #     # ...
     #   end
     #   
+    # == DJ Events
+    # 
+    # * +:fan_added+ - A new fan was added by a user in the room
+    # * +:fan_removed+ - A fan was removed from a user in the room
+    # 
+    # @example
+    #   client.on :fan_added do |user, fan_of| # User
+    #     puts user.id
+    #     # ...
+    #   end
+    #   
+    #   client.on :fan_removed do |user, count| # User
+    #     puts user.id
+    #     # ...
+    #   end
+    # 
     # == DJ Events
     # 
     # * +:dj_added+ - A new DJ was added to the booth

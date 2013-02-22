@@ -23,7 +23,7 @@ module Turntabler
       # @yieldreturn The typecasted data that should be passed into any handlers bound to the event
       # @return [nil]
       def handle(name, command = name, &block)
-        block ||= lambda {}
+        block ||= lambda { [args] }
         commands[command] = name
 
         define_method("typecast_#{command}_event", &block)
@@ -101,16 +101,32 @@ module Turntabler
 
     # A user's name / profile has been updated
     handle :user_updated, :update_user do
-      fans_change = data.delete('fans')
+      fans_change = data.delete('fans') || 0
       user = room.build_user(data)
-      user.attributes = {'fans' => user.fans_count + fans_change} if fans_change
+      user.attributes = {'fans' => user.fans_count + fans_change}
+
+      # Trigger detailed events for exactly what changed to make it easier to
+      # detect the various situations
+      client.trigger(:user_name_updated, user) if data['name']
+      client.trigger(:user_avatar_updated, user) if data['avatarid']
+      client.trigger(:fan_added, user, room.build_user(:_id => data['fanid'])) if fans_change > 0
+      client.trigger(:fan_removed, user, fans_change.abs) if fans_change < 0
+
       user
     end
+
+    # User's name has been updated
+    handle :user_name_updated
+
+    # A user's avatar has been updated
+    handle :user_avatar_updated
 
     # A user's stickers have been updated
     handle :user_updated, :update_sticker_placements do
       room.build_user(data)
     end
+
+    handle :user_stickers_updated
 
     # A user spoke in the chat room
     handle :user_spoke, :speak do
@@ -118,14 +134,20 @@ module Turntabler
       Message.new(client, data)
     end
 
-    # A new dj was added to the room
+    # A new fan was added by a user in the room
+    handle :fan_added
+
+    # A fan has been removed by a user in the room
+    handle :fan_removed
+
+    # A new dj was added to the booth
     handle :dj_added, :add_dj do
       user = room.build_user(data['user'][0].merge('placements' => data['placements']))
       room.djs << user
       user
     end
 
-    # A dj was removed from the room
+    # A dj was removed from the booth
     handle :dj_removed, :rem_dj do
       data['user'].map do |attrs|
         user = room.build_user(attrs)

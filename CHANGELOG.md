@@ -1,5 +1,8 @@
 # master
 
+* Add fan_added / fan_removed events
+* Add user_name_updated / user_avatar_updated events
+
 ## 0.2.1 / 2013-02-16
 
 * Fix exceptions on initial connection not causing reconnection process to kick in

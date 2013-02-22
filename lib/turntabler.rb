@@ -113,7 +113,7 @@ module Turntabler
         if Event.command?(name)
           raise ArgumentError, "Event :#{name} is already defined"
         else
-          Event.handle(name) { [args] }
+          Event.handle(name)
         end
       end
     end
