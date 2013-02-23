@@ -318,8 +318,9 @@ module Turntabler
     # * +:song_ended+ - The current song has ended.  This is typically followed by a +:song_started+ or +:song_unavailable+ event.
     # * +:song_voted+ - One or more votes were cast for the song
     # * +:song_snagged+ - A user in the room has queued the current song onto their playlist
-    # * +:song_blocked+ - A song was skipped due to a copyright claim
-    # * +:song_limited+ - A song was skipped due to a limit on # of plays per hour
+    # * +:song_skipped+ - A song was skipped due to either the dj skipping it or too many downvotes
+    # * +:song_moderated+ - A song was forcefully skipped by a moderator
+    # * +:song_blocked+ - A song was prevented from playing due to a copyright claim
     # 
     # @example
     #   client.on :song_unavailable do
@@ -346,6 +347,17 @@ module Turntabler
     #   client.on :song_snagged do |snag| # Snag
     #     puts snag.user.id
     #     puts snag.song.id
+    #     # ...
+    #   end
+    #   
+    #   client.on :song_skipped do |song| # Song
+    #     puts song.title
+    #     # ...
+    #   end
+    #   
+    #   client.on :song_moderated do |song, moderator| # Song, User
+    #     puts song.title
+    #     puts moderator.id
     #     # ...
     #   end
     #   

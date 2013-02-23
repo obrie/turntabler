@@ -187,7 +187,8 @@ module Turntabler
     # There are no more songs to play in the room
     handle :song_unavailable, :nosong do
       client.trigger(:song_ended) if room.current_song
-      room.attributes = data['room'].merge('current_song' => nil)
+      data['room'].delete('current_song')
+      room.attributes = data['room']
       nil
     end
 
@@ -200,7 +201,10 @@ module Turntabler
 
     # The current song has ended
     handle :song_ended do
-      room.current_song
+      current_song = room.current_song
+      client.trigger(:song_skipped) if current_song.seconds_remaining > 10
+      room.attributes = {'current_song' => nil}
+      current_song
     end
 
     # A vote was cast for the song
@@ -232,6 +236,16 @@ module Turntabler
       client.trigger(:song_ended) if room.current_song
       Song.new(client, data)
     end
+
+    # A song was forcefully skipped by a moderator
+    handle :song_moderated, :stop_song do
+      moderator = room.build_user(:_id => data['skipperId'])
+      [[room.current_song, moderator]]
+    end
+
+    # A song was ended before it completed, either because the dj skipped it or
+    # it was booed off
+    handle :song_skipped
 
     # A private message was received from another user in the room
     handle :message_received, :pmmed do
