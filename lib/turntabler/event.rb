@@ -71,8 +71,16 @@ module Turntabler
     # Information about the room was updated
     handle :room_updated, :update_room do
       room.attributes = data
+
+      # Trigger detailed events for exactly what changed to make it easier to
+      # detect the various situations
+      client.trigger(:room_description_updated, room) if data['description']
+
       room
     end
+
+    # A room's description has been updated
+    handle :room_description_updated
 
     # One or more users have entered the room
     handle :user_entered, :registered do

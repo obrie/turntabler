@@ -1,5 +1,6 @@
 # master
 
+* Add room_description_updated event
 * Add song_skipped / song_moderated events
 * Add #started_at, #ends_at, and #seconds_remaining to Song
 * Add dj_escorted_off / dj_booed_off events

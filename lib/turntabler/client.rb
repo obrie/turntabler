@@ -197,9 +197,15 @@ module Turntabler
     # == Room Events
     # 
     # * +:room_updated+ - Information about the room was updated
+    # * +:room_description_updated+ - The room's description was updated
     # 
     # @example
     #   client.on :room_updated do |room| # Room
+    #     puts room.description
+    #     # ...
+    #   end
+    #   
+    #   client.on :room_description_updated do |room| # Room
     #     puts room.description
     #     # ...
     #   end
