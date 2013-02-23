@@ -201,14 +201,14 @@ module Turntabler
     # Adds the song to one of the user's playlists.
     # 
     # @param [Hash] options The options for where to add the song
-    # @option options [String] :playlist ("default") The playlist to enqueue the song in
+    # @option options [String] :playlist ("default") The playlist to add the song in
     # @option options [Fixnum] :index (0) The location in the playlist to insert the song
     # @return [true]
     # @raise [ArgumentError] if an invalid option is specified
     # @raise [Turntabler::Error] if the command fails
     # @example
-    #   song.enqueue(:index => 1)   # => true
-    def enqueue(options = {})
+    #   song.add(:index => 1)   # => true
+    def add(options = {})
       assert_valid_keys(options, :playlist, :index)
       options = {:playlist => playlist.id, :index => 0}.merge(options)
 
@@ -228,8 +228,8 @@ module Turntabler
     # @raise [ArgumentError] if an invalid option is specified
     # @raise [Turntabler::Error] if the command fails
     # @example
-    #   song.dequeue    # => true
-    def dequeue
+    #   song.remove   # => true
+    def remove
       api('playlist.remove', :playlist_name => playlist.id, :index => index)
       playlist.songs.delete(self)
       true

@@ -1,5 +1,6 @@
 # master
 
+* Rename Song#enqueue to Song#add and Song#dequeue to Song#remove
 * Song#dequeue and #move no longer allow the playlist to be specified since it's known upfront
 * Fix Song#load not getting metadata from the correct playlist
 * Add Song#playlist

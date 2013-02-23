@@ -160,7 +160,7 @@ Turntabler.run do
   # Songs
   songs = client.search_song('Rolling Stones')      # => [#<Turntabler::Song @album="Tattoo You (2009 Remaster)" ...>, ...]
   songs.each do
-    song.enqueue                                    # => true
+    song.add                                        # => true
   end
 end
 ```
