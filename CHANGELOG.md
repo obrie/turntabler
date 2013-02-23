@@ -4,7 +4,7 @@
 * Add #started_at, #ends_at, and #seconds_remaining to Song
 * Add dj_escorted_off / dj_booed_off events
 * Add fan_added / fan_removed events
-* Add user_name_updated / user_avatar_updated events
+* Add user_name_updated / user_avatar_updated / user_stickers_updated events
 
 ## 0.2.1 / 2013-02-16
 

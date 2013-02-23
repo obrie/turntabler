@@ -246,6 +246,11 @@ module Turntabler
     #     # ...
     #   end
     #   
+    #   client.on :user_stickers_updated do |user| # User
+    #     puts user.stickers.map {|sticker| sticker.id}
+    #     # ...
+    #   end
+    #   
     #   client.on :user_spoke do |message| # Message
     #    puts message.content
     #     # ...

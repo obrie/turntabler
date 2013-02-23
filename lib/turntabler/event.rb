@@ -115,7 +115,7 @@ module Turntabler
       user
     end
 
-    # User's name has been updated
+    # A user's name has been updated
     handle :user_name_updated
 
     # A user's avatar has been updated
@@ -123,9 +123,12 @@ module Turntabler
 
     # A user's stickers have been updated
     handle :user_updated, :update_sticker_placements do
-      room.build_user(data)
+      user = room.build_user(data)
+      client.trigger(:user_stickers_updated, user)
+      user
     end
 
+    # A user's stickers have been updated
     handle :user_stickers_updated
 
     # A user spoke in the chat room
