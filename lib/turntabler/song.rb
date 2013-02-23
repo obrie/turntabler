@@ -49,6 +49,12 @@ module Turntabler
     # @return [String]
     attribute :source_id, :sourceid
     
+    # The playlist this song is referenced from
+    # @return [Turntabler::Playlist]
+    attribute :playlist do |id|
+      client.user.playlists.build(:_id => id)
+    end
+    
     # The time at which the song was started
     # @return [Time]
     attribute :started_at, :starttime
@@ -88,11 +94,12 @@ module Turntabler
     end
 
     # @api private
-    def initialize(*)
+    def initialize(client, *)
       @up_votes_count = 0
       @down_votes_count = 0
       @votes = []
       @score = 0
+      @playlist = client.user.playlists.build(:_id => 'default')
       super
     end
 
@@ -123,7 +130,7 @@ module Turntabler
     #   song.load     # => true
     #   song.title    # => "..."
     def load
-      data = api('playlist.get_metadata', :playlist_name => 'default', :files => [id])
+      data = api('playlist.get_metadata', :playlist_name => playlist.id, :files => [id])
       self.attributes = data['files'][id]
       super
     end
@@ -203,28 +210,26 @@ module Turntabler
     #   song.enqueue(:index => 1)   # => true
     def enqueue(options = {})
       assert_valid_keys(options, :playlist, :index)
-      options = {:playlist => 'default', :index => 0}.merge(options)
-      playlist, index = client.user.playlist(options[:playlist]), options[:index]
+      options = {:playlist => playlist.id, :index => 0}.merge(options)
+
+      # Create a copy of the song so that the playlist can get set properly
+      song = dup
+      song.attributes = {:playlist => options[:playlist]}
+      playlist, index = song.playlist, options[:index]
 
       api('playlist.add', :playlist_name => playlist.id, :song_dict => {:fileid => id}, :index => index)
-      playlist.songs.insert(index, self) if playlist.loaded?
+      playlist.songs.insert(index, song) if playlist.loaded?
       true
     end
     
     # Removes the song from the playlist at the given index.
     # 
-    # @param [Hash] options The options for where to remove the song
-    # @option options [String] :playlist ("default") The playlist to dequeue the song from
     # @return [true]
     # @raise [ArgumentError] if an invalid option is specified
     # @raise [Turntabler::Error] if the command fails
     # @example
     #   song.dequeue    # => true
-    def dequeue(options = {})
-      assert_valid_keys(options, :playlist)
-      options = {:playlist => 'default'}.merge(options)
-      playlist, index = index(options[:playlist])
-
+    def dequeue
       api('playlist.remove', :playlist_name => playlist.id, :index => index)
       playlist.songs.delete(self)
       true
@@ -233,17 +238,11 @@ module Turntabler
     # Move a song from one location in the playlist to another.
     # 
     # @param [Fixnum] to_index The index to move the song to
-    # @param [Hash] options The options for where to remove the song
-    # @option options [String] :playlist ("default") The playlist to move the song within
     # @return [true]
     # @raise [ArgumentError] if an invalid option is specified
     # @raise [Turntabler::Error] if the command fails
     #   song.move(5)    # => true
-    def move(to_index, options = {})
-      assert_valid_keys(options, :playlist)
-      options = {:playlist => 'default'}.merge(options)
-      playlist, index = index(options[:playlist])
-
+    def move(to_index)
       api('playlist.reorder', :playlist_name => playlist.id, :index_from => index, :index_to => to_index)
       playlist.songs.insert(to_index, playlist.songs.delete(self))
       true
@@ -258,11 +257,10 @@ module Turntabler
     
     # Gets the index of this song within the given playlist.  Raises Turntabler::Error
     # if the song cannot be found in the playlist.
-    def index(playlist_id)
-      playlist = client.user.playlist(playlist_id)
+    def index
       index = playlist.songs.index(self)
       raise(APIError, "Song \"#{id}\" is not in playlist \"#{playlist.id}\"") unless index
-      return playlist, index
+      index
     end
   end
 end

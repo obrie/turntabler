@@ -16,7 +16,7 @@ module Turntabler
     # The songs that have been added to this playlist
     # @return [Array<Turntabler::Song>]
     attribute :songs, :list do |songs|
-      songs.map {|attrs| Song.new(client, attrs)}
+      songs.map {|attrs| Song.new(client, attrs.merge(:playlist => id))}
     end
 
     # Loads the attributes for this playlist.  Attributes will automatically load

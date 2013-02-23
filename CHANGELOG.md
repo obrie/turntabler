@@ -1,5 +1,8 @@
 # master
 
+* Song#dequeue and #move no longer allow the playlist to be specified since it's known upfront
+* Fix Song#load not getting metadata from the correct playlist
+* Add Song#playlist
 * Add room_description_updated event
 * Add song_skipped / song_moderated events
 * Add #started_at, #ends_at, and #seconds_remaining to Song
