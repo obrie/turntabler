@@ -1,5 +1,7 @@
 # master
 
+## 0.3.0 / 2013-02-23
+
 * Fix playlist order not being maintained properly in process
 * Rename Song#enqueue to Song#add and Song#dequeue to Song#remove
 * Song#dequeue and #move no longer allow the playlist to be specified since it's known upfront
