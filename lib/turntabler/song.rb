@@ -51,13 +51,13 @@ module Turntabler
     
     # The playlist this song is referenced from
     # @return [Turntabler::Playlist]
-    attribute :playlist do |id|
+    attribute :playlist, :load => false do |id|
       client.user.playlists.build(:_id => id)
     end
     
     # The time at which the song was started
     # @return [Time]
-    attribute :started_at, :starttime
+    attribute :started_at, :starttime, :load => false
 
     # The number of up votes this song has received.
     # @note This is only available for the current song playing in a room
