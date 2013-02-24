@@ -248,6 +248,15 @@ module Turntabler
       true
     end
     
+    # Moves this song to the back of the playlist it's associated with.  If there
+    # are other songs in front of it, those will be moved to the back as well.
+    # 
+    # @api private
+    def dequeue
+      playlist.songs.concat(playlist.songs.slice!(0, index + 1))
+      true
+    end
+
     private
     # Asserts that this is the song currently being played in the room the user
     # is in.  Raises Turntabler::Error if this is not the case.
