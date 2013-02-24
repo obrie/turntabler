@@ -13,7 +13,10 @@ module Turntabler
     # @return [Boolean]
     attribute :active, :load => false
 
-    # The songs that have been added to this playlist
+    # The songs that have been added to this playlist.  Songs will be listed in
+    # the order that they will be played.  If the user is currently playing, then
+    # that song will be listed last since it has been removed from the top of
+    # the queue by Turntable.
     # @return [Array<Turntabler::Song>]
     attribute :songs, :list do |songs|
       songs.map {|attrs| Song.new(client, attrs.merge(:playlist => id))}
