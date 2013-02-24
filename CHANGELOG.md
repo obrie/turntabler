@@ -1,6 +1,8 @@
 # master
 
-* Remove Song#dequeue to avoid confusion with its previous behavior
+## 0.3.1 / 2013-02-24
+
+* Rename Song#dequeue to #rotate_out to avoid confusion with its previous behavior
 
 ## 0.3.0 / 2013-02-23
 
