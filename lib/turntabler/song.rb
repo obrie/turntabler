@@ -99,8 +99,8 @@ module Turntabler
       @down_votes_count = 0
       @votes = []
       @score = 0
-      @playlist = client.user.playlists.build(:_id => 'default')
       super
+      @playlist = client.user.playlists.build(:_id => 'default') if played_by != client.user
     end
 
     # The time at which this song will end playing.
