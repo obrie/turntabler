@@ -1,5 +1,7 @@
 # master
 
+* Remove Song#dequeue to avoid confusion with its previous behavior
+
 ## 0.3.0 / 2013-02-23
 
 * Fix playlist order not being maintained properly in process

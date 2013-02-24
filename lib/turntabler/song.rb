@@ -252,8 +252,8 @@ module Turntabler
     # are other songs in front of it, those will be moved to the back as well.
     # 
     # @api private
-    def dequeue
-      playlist.songs.concat(playlist.songs.slice!(0, index + 1))
+    def rotate_out
+      playlist.songs.rotate!(index + 1)
       true
     end
 

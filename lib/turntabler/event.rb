@@ -210,7 +210,7 @@ module Turntabler
       current_song = room.current_song
 
       # Update playlist order if it was played by the current user
-      current_song.dequeue if current_song.played_by == client.user
+      current_song.rotate_out if current_song.played_by == client.user
 
       current_song
     end
