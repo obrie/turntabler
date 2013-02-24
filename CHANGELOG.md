@@ -1,5 +1,7 @@
 # master
 
+## 0.3.2 / 2013-02-24
+
 * Fix songs being added to the wrong playlist when played by other djs
 * Don't load song data when accessing the playlist or started_at timestamp
 
