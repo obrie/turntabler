@@ -82,7 +82,7 @@ module Turntabler
     #   user.load         # => true
     #   user.laptop_name  # => "chrome"
     def load
-      data = api('user.get_profile', :userid => id)
+      data = api('user.get_profile', :profileid => id)
       self.attributes = data
       super
     end

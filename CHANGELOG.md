@@ -1,5 +1,6 @@
 # master
 
+* Update User#load to use the new user.get_profile API parameters
 * Update Song#skip to use the new room.stop_song API parameters
 
 ## 0.3.2 / 2013-02-24
