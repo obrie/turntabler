@@ -144,7 +144,7 @@ module Turntabler
     #   song.skip   # => true
     def skip
       assert_current_song
-      api('room.stop_song', :roomid => room.id, :section => room.section)
+      api('room.stop_song', :songid => id, :djid => played_by.id, :roomid => room.id, :section => room.section)
       true
     end
 

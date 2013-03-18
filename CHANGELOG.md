@@ -1,5 +1,7 @@
 # master
 
+* Update Song#skip to use the new room.stop_song API parameters
+
 ## 0.3.2 / 2013-02-24
 
 * Fix songs being added to the wrong playlist when played by other djs
