@@ -1,5 +1,7 @@
 # master
 
+## 0.3.3 / 2013-03-18
+
 * Fix Preferences#update not validating options properly
 * Update User#load to use the new user.get_profile API parameters
 * Update Song#skip to use the new room.stop_song API parameters
