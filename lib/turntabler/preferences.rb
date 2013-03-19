@@ -62,7 +62,7 @@ module Turntabler
     # @example
     #   preferences.update(:notify_dj => false)   # => true
     def update(attributes = {})
-      assert_valid_values(attributes, :notify_dj, :notify_fan, :notify_news, :notify_random, :facebook_awesome, :facebook_join, :facebook_dj)
+      assert_valid_keys(attributes, :notify_dj, :notify_fan, :notify_news, :notify_random, :facebook_awesome, :facebook_join, :facebook_dj)
       api('user.edit_prefs', attributes)
       self.attributes = attributes
       true
