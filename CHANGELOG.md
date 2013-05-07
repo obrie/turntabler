@@ -1,5 +1,7 @@
 # master
 
+* Fix Resource initialization not working on Ruby 2.0
+
 ## 0.3.3 / 2013-03-18
 
 * Fix Preferences#update not validating options properly

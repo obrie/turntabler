@@ -130,7 +130,7 @@ module Turntabler
           if attribute == 'metadata'
             self.attributes = value
           else
-            __send__("#{attribute}=", value) if respond_to?("#{attribute}=")
+            __send__("#{attribute}=", value) if respond_to?("#{attribute}=", true)
           end
         end
       end
