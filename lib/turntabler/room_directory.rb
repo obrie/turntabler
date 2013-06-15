@@ -54,12 +54,12 @@ module Turntabler
     # @raise [ArgumentError] if an invalid option or value is specified
     # @raise [Turntabler::Error] if the command fails
     # @example
-    #   rooms.all                                           # => [#<Turntabler::Room ...>, ...]
-    #   rooms.all(:favorites => true)                       # => [#<Turntabler::Room ...>, ...]
-    #   rooms.all(:available_djs => true, :genre => :rock)  # => [#<Turntabler::Room ...>, ...]
-    #   rooms.all(:sort => :random)                         # => [#<Turntabler::Room ...>, ...]
-    def all(options = {})
-      assert_valid_keys(options, :limit, :skip, :favorites, :available_djs, :genre, :minimum_listeners, :sort)
+    #   rooms.list                                          # => [#<Turntabler::Room ...>, ...]
+    #   rooms.list(:favorites => true)                      # => [#<Turntabler::Room ...>, ...]
+    #   rooms.list(:available_djs => true, :genre => :rock) # => [#<Turntabler::Room ...>, ...]
+    #   rooms.list(:sort => :random)                        # => [#<Turntabler::Room ...>, ...]
+    def list(options = {})
+      assert_valid_keys(options, :limit, :skip, :favorites, :available_djs, :genre, :minimum_listeners, :sort, :step)
       assert_valid_values(options[:genre], :rock, :electronic, :indie, :hiphop, :pop, :dubstep) if options[:genre]
       assert_valid_values(options[:sort], :created, :listeners, :random) if options[:sort]
       options = {
@@ -68,7 +68,8 @@ module Turntabler
         :favorites => false,
         :available_djs => false,
         :minimum_listeners => 1,
-        :sort => :listeners
+        :sort => :listeners,
+        :step => 20
       }.merge(options)
 
       constraints = []
@@ -80,14 +81,17 @@ module Turntabler
         options[:sort] = "#{options[:sort]},genre:#{options[:genre]}"
       end
 
-      data = api('room.directory_rooms',
-        :section_aware => true,
-        :limit => options[:limit],
-        :skip => options[:skip],
-        :constraints => constraints * ',',
-        :sort => options[:sort]
-      )
-      data['rooms'].map {|attrs| Room.new(client, attrs)}
+      steps = options[:skip].step(options[:limit]-1, options[:step])
+      steps.map do |skip|
+        data = api('room.directory_rooms',
+          :section_aware => true,
+          :limit => options[:limit],
+          :skip => skip,
+          :constraints => constraints * ',',
+          :sort => options[:sort]
+        )
+        data['rooms'].map {|attrs| Room.new(client, attrs)}        
+      end.flatten
     end
 
     # Gets the rooms where the current user's friends are currently listening.
