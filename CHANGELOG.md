@@ -1,5 +1,7 @@
 # master
 
+## 0.3.4 / 2013-07-11
+
 * Fix heartbeat responses not being sent properly resulting in periodic disconnects
 * Fix Resource initialization not working on Ruby 2.0
 
