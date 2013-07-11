@@ -98,7 +98,7 @@ module Turntabler
     private
     # Publishes the given params to the web socket
     def publish_to_socket(params)
-      message = params.to_json
+      message = params.is_a?(String) ? params : params.to_json
       data = "~m~#{message.length}~m~#{message}"
       @socket.send(data)
     end
@@ -155,9 +155,9 @@ module Turntabler
         case response
         when /no_session/
           {'command' => 'no_session'}
-        when /~h~([0-9]+)/
+        when /(~h~[0-9]+)/
           # Send the heartbeat command back to the server
-          @socket.send($1)
+          publish_to_socket($1)
           {'command' => 'heartbeat'}
         else
           JSON.parse(response)
