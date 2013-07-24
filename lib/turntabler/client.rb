@@ -506,11 +506,22 @@ module Turntabler
 
       api('file.search', :query => query, :page => options[:page])
 
+      conditions = {'query' => query}
+
+      # Time out if the response takes too long
+      EventMachine.add_timer(@timeout) do
+        trigger(:search_failed, conditions)
+      end if @timeout
+
       # Wait for the async callback
       songs = wait do |&resume|
-        on(:search_completed, :once => true, :if => {'query' => query}) {|songs| resume.call(songs)}
-        on(:search_failed, :once => true, :if => {'query' => query}) { resume.call }
+        on(:search_completed, :once => true, :if => conditions) {|songs| resume.call(songs)}
+        on(:search_failed, :once => true, :if => conditions) { resume.call }
       end
+
+      # Clean up any leftover handlers
+      @event_handlers[:search_completed].delete_if {|handler| handler.conditions == conditions}
+      @event_handlers[:search_failed].delete_if {|handler| handler.conditions == conditions}
 
       songs || raise(APIError, 'Search failed to complete')
     end
