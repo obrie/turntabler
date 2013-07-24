@@ -1,6 +1,7 @@
 require 'turntabler/resource'
 require 'turntabler/user'
 require 'turntabler/vote'
+require 'date'
 
 module Turntabler
   # Represents a song that can be played on Turntable
@@ -28,6 +29,12 @@ module Turntabler
     # The label that produced the music
     # @return [String]
     attribute :label
+
+    # The date the song / album was released on
+    # @return [Date]
+    attribute :released_on, :releasedate do |value|
+      Date.parse(value)
+    end
 
     # The URL for the cover art image
     # @return [String]
