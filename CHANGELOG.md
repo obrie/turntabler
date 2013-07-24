@@ -1,5 +1,7 @@
 # master
 
+## 0.3.5 / 2013-07-20
+
 * Fix song searches not respecting request timeouts
 * Add Song#released_on
 
